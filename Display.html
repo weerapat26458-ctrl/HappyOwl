@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Event: Happy Owl (Safe Mode)</title>
+    <title>AI Event: Happy Owl (Safe Mode + JFF CORP's)</title>
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     
     <style>
@@ -240,7 +240,7 @@
         .d-1 { animation-delay: 0.5s; } .d-2 { animation-delay: 1.5s; } .d-3 { animation-delay: 2.5s; }
         .d-4 { animation-delay: 3.8s; } .d-5 { animation-delay: 4.8s; } .d-6 { animation-delay: 5.8s; }
 
-        /* === VIP STYLES === */
+        /* === VIP STYLES (Limited) === */
         .msg-box.limited-card {
             background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
             border: 2px solid #bfa35f; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
@@ -257,6 +257,87 @@
         .msg-img.limited-img { border-radius: 12px; border: 2px solid #FFD700; box-shadow: 0 0 15px rgba(255, 215, 0, 0.6); }
         .crown-badge { position: absolute; top: -14px; left: -8px; font-size: 24px; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.8)); transform: rotate(-15deg); animation: crownBounce 2s infinite ease-in-out; z-index: 10; }
         @keyframes crownBounce { 0%, 100% { transform: rotate(-15deg) translateY(0); } 50% { transform: rotate(-15deg) translateY(-3px); } }
+
+        /* ========================================= */
+        /* === JFF CORP'S EXCLUSIVE NEON STYLE === */
+        /* ========================================= */
+        .msg-box.jff-style {
+            background: rgba(15, 0, 25, 0.95); /* สีพื้นหลังม่วงดำเข้มๆ */
+            border: none;
+            position: relative;
+            overflow: visible; /* ให้แสง Glow ทะลุกรอบ */
+            box-shadow: 0 0 20px rgba(255, 0, 222, 0.3);
+            /* Clip-path สร้างมุมตัดแบบไซเบอร์ */
+            clip-path: polygon(
+                10px 0, 100% 0, 
+                100% calc(100% - 10px), calc(100% - 10px) 100%, 
+                0 100%, 0 10px
+            );
+            /* Padding เผื่อให้เส้นขอบ */
+            padding: 12px; 
+            margin-bottom: 12px; 
+        }
+
+        /* สร้างเส้นขอบ Neon ด้วย Pseudo-element */
+        .msg-box.jff-style::before {
+            content: '';
+            position: absolute; inset: 0;
+            padding: 2px; /* ความหนาเส้นขอบ */
+            border-radius: 0; 
+            background: linear-gradient(90deg, #ff00de, #00ffff, #ff00de); /* ไล่สี ชมพู-ฟ้า */
+            -webkit-mask: 
+                linear-gradient(#fff 0 0) content-box, 
+                linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        /* ตกแต่งมุมกรอบ (Corner Accents) สีฟ้า Cyan */
+        .msg-box.jff-style::after {
+            content: '';
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            /* มุมซ้ายบนและขวาล่าง */
+            background: 
+                linear-gradient(to right, #00ffff 2px, transparent 2px) 0 0,
+                linear-gradient(to bottom, #00ffff 2px, transparent 2px) 0 0,
+                linear-gradient(to left, #00ffff 2px, transparent 2px) 100% 100%,
+                linear-gradient(to top, #00ffff 2px, transparent 2px) 100% 100%;
+            background-size: 15px 15px; /* ขนาดของมุมฉาก */
+            background-repeat: no-repeat;
+            z-index: 3;
+            opacity: 0.8;
+            box-shadow: 0 0 10px #00ffff;
+        }
+        
+        /* แถบตกแต่งสีชมพู ด้านบนและล่าง (Bar Accents) */
+        .jff-decor-bar {
+            position: absolute; left: 50%; transform: translateX(-50%);
+            width: 60%; height: 2px; background: #ff00de;
+            box-shadow: 0 0 8px #ff00de; z-index: 4;
+        }
+        .jff-decor-top { top: 4px; }
+        .jff-decor-bottom { bottom: 4px; }
+
+        /* ข้อความใน JFF Frame */
+        .msg-box.jff-style .msg-text { 
+            color: #ffffff; 
+            text-shadow: 0 0 5px rgba(255, 0, 222, 0.8); 
+            font-family: 'Chakra Petch', sans-serif; /* เปลี่ยนฟอนต์ให้ดู Tech */
+            font-weight: 500;
+        }
+        .msg-box.jff-style .msg-name { 
+            color: #00ffff; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            letter-spacing: 1px;
+            text-shadow: 0 0 5px #00ffff;
+        }
+        .msg-box.jff-style .msg-img {
+            border: 2px solid #00ffff;
+            box-shadow: 0 0 10px #ff00de;
+        }
 
         /* --- OWL MASCOT (Bottom Align) --- */
         .owl-container { 
@@ -340,27 +421,33 @@
             "สิทธิ์การใช้งาน AI (คละแบบ)", "ยืมหนังสือเพิ่ม 1 เท่า", "รางวัลพิเศษ"
         ];
         
-        // --- 🛑 โซนกรองคำหยาบ (Profanity Filter) ---
-        // เพิ่มคำที่ต้องการแบนลงใน [ ] ได้เลยครับ
+        // --- 🛑 ULTIMATE PROFANITY FILTER ---
         const badWords = [
-            "kuy", "fck", "shit", "bitch", "asshole", "fuck", "dick", "pussy", "bastard",
-            "ควย", "เหี้ย", "สัส", "เย็ด", "มึง", "กู", "เลว", "โง่", "ชั่ว", "นรก", "ระยำ", 
-            "flower", "ดอกทอง", "แม่ง", "ไอ้สัตว์", "อีสัตว์", "พ่อมึงตาย", "แม่มึงตาย",
-            "สันดาน", "อัปรีย์", "จัญไร"
+            "fuck", "shit", "bitch", "asshole", "cunt", "dick", "pussy", "bastard", "motherfucker", 
+            "whore", "slut", "idiot", "stupid", "dumbass", "wanker", "jerk", "sucker", "cock", 
+            "kuy", "fck", "sh1t", "b1tch",
+            "ควย", "เหี้ย", "สัส", "สัตว์", "เย็ด", "เยด", "แม่ง", "มึง", "กู", "มรึง", "กุ",
+            "เลว", "โง่", "ชั่ว", "นรก", "ระยำ", "จัญไร", "เสนียด", "สถุน", "ชาติชั่ว", "อัปรีย์",
+            "ดอกทอง", "ร่าน", "แรด", "ตอแหล", "หน้าตัวเมีย", "หี", "แตด", "โคม",
+            "พ่อมึง", "แม่มึง", "พ่อตาย", "แม่ตาย", "เย็ดแม่", "เย็ดพ่อ",
+            "kuy", "quyy", "here", "sad", "sud", "yed", "yet", "mae", "por", "mung", "gu",
+            "dok", "he", "hee", "tad", "kum", "sathoon", "rayum", "junrai"
         ];
 
-        let allMessages = [];       
+        let allMessages = [];        
         let newMessagesQueue = [];
         let allLimitedWinners = []; 
         let totalUsers = 0; 
         
         const demoMessages = [
-            { text: "คนไม่ใช่หุ่นยนต์", name: "นกแก้ว", image: null, isLimited: true, reward: "รางวัลพิเศษ" },
+            // ใส่ Demo ไว้ทดสอบ (ถ้าชื่อตรง มันจะขึ้นกรอบม่วงทันที)
+            { text: "TEST: JFF CORP's (Straight Quote)", name: "JFF CORP's", image: null, isLimited: false, reward: "-" },
+            { text: "TEST: JFF CORP’s (Smart Quote)", name: "JFF CORP’s", image: null, isLimited: false, reward: "-" },
+            
             { text: "ขอให้โลกนี้ใจดีกับทุกคน", name: "User 1", image: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png", isLimited: true, reward: "จองห้อง Mini Theatre (3 ชม.)" },
             { text: "สวัสดีวันจันทร์", name: "User 2", image: null, isLimited: false },
             { text: "อยากได้รางวัลใหญ่จังเลยยย", name: "User 3", image: "https://cdn-icons-png.flaticon.com/512/3135/3135768.png", isLimited: false },
-            { text: "Happy New Year 2026!", name: "User 4", image: null, isLimited: false },
-            { text: "ขอบคุณทีมงานครับ งานสนุกมาก", name: "User 5", image: null, isLimited: false }
+            { text: "Happy New Year 2026!", name: "User 4", image: null, isLimited: false }
         ];
 
         const staticLeft = document.getElementById('static-left');
@@ -371,10 +458,9 @@
         const scrollingContent = document.getElementById('scrolling-content');
         const totalCountEl = document.getElementById('total-count');
 
-        // ฟังก์ชันเช็คคำหยาบ
         function containsBadWords(text) {
             if (!text) return false;
-            const lowerText = text.toLowerCase();
+            const lowerText = text.toLowerCase().replace(/\s/g, ''); 
             return badWords.some(word => lowerText.includes(word));
         }
 
@@ -427,6 +513,9 @@
             scrollingContent.classList.add('scrolling-up');
         }
 
+        // ==========================================
+        // 🔥 จุดแก้ไข Logic: รองรับขีดทั้ง 2 แบบ ' และ ’ 🔥
+        // ==========================================
         function generateHTML(msg, seqIndex = 0, isStatic = false) {
             if (!msg || !msg.text) return `<div class="msg-box" style="opacity:0"></div>`;
             const delayClass = (!isStatic && seqIndex > 0) ? `d-${seqIndex}` : '';
@@ -435,12 +524,29 @@
             
             const imgUrl = msg.image ? msg.image : 'https://cdn-icons-png.flaticon.com/512/847/847969.png'; 
             const sizeClass = getTextSizeClass(msg.text);
-            const boxClass = msg.isLimited ? "msg-box limited-card" : "msg-box";
-            const imgClass = msg.isLimited ? "msg-img limited-img" : "msg-img";
-            const crownHtml = msg.isLimited ? '<div class="crown-badge">👑</div>' : '';
+            
+            let boxClass = "msg-box";
+            let imgClass = "msg-img";
+            let crownHtml = "";
+            let extraDecor = "";
+
+            // 1. แปลงชื่อให้เป็นมาตรฐาน (ตัดช่องว่าง, แปลง ’ เป็น ')
+            // เพื่อให้ JFF CORP's และ JFF CORP’s (พิมพ์จากมือถือ) ผ่านทั้งคู่
+            const cleanName = msg.name ? msg.name.trim().replace(/’/g, "'") : "";
+
+            if (cleanName === "JFF CORP's") {
+                boxClass += " jff-style"; 
+                extraDecor = `<div class="jff-decor-bar jff-decor-top"></div><div class="jff-decor-bar jff-decor-bottom"></div>`;
+            } 
+            else if (msg.isLimited) {
+                boxClass += " limited-card";
+                imgClass += " limited-img";
+                crownHtml = '<div class="crown-badge">👑</div>';
+            }
 
             return `
                 <div class="${boxClass} ${animClass} ${delayClass}" style="${opacityStyle}">
+                    ${extraDecor}
                     <div class="img-wrapper">
                         ${crownHtml}
                         <img src="${imgUrl}" class="${imgClass}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/847/847969.png'">
@@ -518,11 +624,11 @@
                 if (!error && data && data.length > 0) {
                     let realMessages = [];
                     data.forEach(item => {
-                        // กรองคำหยาบก่อนแสดงผล
                         if (!containsBadWords(item.message)) {
                             realMessages.push(formatMessage(item));
                         }
                     });
+                    
                     allMessages = realMessages; 
                     allLimitedWinners = allMessages.filter(m => m.isLimited);
                 } else {
@@ -538,7 +644,6 @@
                     totalCountEl.innerText = totalUsers.toLocaleString();
 
                     const newItem = payload.new;
-                    // กรองคำหยาบก่อนเพิ่มเข้าคิว
                     if (!containsBadWords(newItem.message)) {
                         const formatted = formatMessage(newItem);
                         newMessagesQueue.push(formatted);
