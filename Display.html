@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Event: Happy Owl</title>
+    <title>AI Event: Happy Owl (Safe Mode)</title>
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     
     <style>
@@ -47,49 +47,33 @@
             100% { transform: translateY(-100vh) scale(0.5); opacity: 0; }
         }
 
-        /* --- 1. HEADER (MOVED DOWN) --- */
+        /* --- HEADER --- */
         .header-container {
-            position: absolute; 
-            top: 60px; /* ขยับลงมาให้ไม่ติดขอบบน */
-            left: 0; width: 100%;
-            text-align: center; 
-            /* ลบ background gradient ออกเพื่อให้ดูโปร่งขึ้นเมื่อขยับลงมา */
-            z-index: 60; pointer-events: none;
+            position: absolute; top: 60px; left: 0; width: 100%;
+            text-align: center; z-index: 60; pointer-events: none;
         }
         .main-title {
             font-family: 'Chakra Petch', sans-serif; 
-            font-size: 5rem; 
-            font-weight: 700; 
-            font-style: italic; 
-            margin: 0; line-height: 1;
-            text-transform: uppercase; letter-spacing: 2px;
-            
+            font-size: 5rem; font-weight: 700; font-style: italic; 
+            margin: 0; line-height: 1; text-transform: uppercase; letter-spacing: 2px;
             background: linear-gradient(180deg, #ffffff 30%, #4facfe 100%);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            
-            text-shadow: 
-                0 0 10px rgba(255, 255, 255, 0.8),
-                0 0 20px rgba(79, 172, 254, 0.6),
-                0 0 40px rgba(0, 242, 254, 0.4);
-            
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(79, 172, 254, 0.6), 0 0 40px rgba(0, 242, 254, 0.4);
             filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.5));
             position: relative; display: inline-block;
         }
         .main-subtitle {
-            font-family: 'Kanit', sans-serif; font-size: 1.2rem; 
-            color: #e0f7fa; 
+            font-family: 'Kanit', sans-serif; font-size: 1.2rem; color: #e0f7fa; 
             letter-spacing: 8px; text-transform: uppercase; font-weight: 400; margin-top: 5px;
             text-shadow: 0 0 10px rgba(0, 255, 255, 0.8); opacity: 1;
         }
         .header-line {
             width: 150px; height: 4px; 
             background: linear-gradient(90deg, transparent, #ffffff, #00f2fe, transparent);
-            margin: 10px auto 0;
-            border-radius: 10px; 
-            box-shadow: 0 0 20px rgba(0, 242, 254, 0.8);
+            margin: 10px auto 0; border-radius: 10px; box-shadow: 0 0 20px rgba(0, 242, 254, 0.8);
         }
 
-        /* 2. TOTAL COUNTER */
+        /* --- TOTAL COUNTER --- */
         .total-panel {
             position: absolute; top: 25px; right: 30px; z-index: 70; 
             animation: fadeInRight 1s ease-out;
@@ -98,8 +82,7 @@
         
         .total-box {
             background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.5); 
-            border-bottom: 3px solid #00f2fe;
+            border: 1px solid rgba(255, 255, 255, 0.5); border-bottom: 3px solid #00f2fe;
             border-radius: 20px; padding: 8px 25px; 
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2), 0 0 15px rgba(0, 242, 254, 0.2);
             display: flex; flex-direction: column; align-items: flex-end;
@@ -120,16 +103,12 @@
 
         /* --- OWL LOGO (Top Left) --- */
         .owl-logo-container {
-            position: absolute; 
-            top: 25px; left: 30px; 
-            z-index: 200; 
+            position: absolute; top: 25px; left: 30px; z-index: 200; 
             animation: logoFloat 4s ease-in-out infinite;
         }
         .owl-logo-img {
-            width: 200px; 
-            height: auto; display: block;
-            filter: drop-shadow(0 5px 15px rgba(0, 150, 255, 0.4)); 
-            transition: all 0.3s ease;
+            width: 200px; height: auto; display: block;
+            filter: drop-shadow(0 5px 15px rgba(0, 150, 255, 0.4)); transition: all 0.3s ease;
         }
         @keyframes logoFloat {
             0%, 100% { transform: translateY(0); }
@@ -284,7 +263,11 @@
             position: fixed; bottom: -30px; left: 50%; transform: translateX(-50%); 
             width: 450px; z-index: 9999; pointer-events: none; line-height: 0; 
         }
-        .owl-container img { width: 100%; display: block; animation: owlBreathe 4s ease-in-out infinite; transform-origin: bottom center; }
+        .owl-container img { 
+            width: 100%; display: block; 
+            animation: owlBreathe 4s ease-in-out infinite; 
+            transform-origin: bottom center; 
+        }
         @keyframes owlBreathe { 
             0%, 100% { transform: translateY(0) scale(1); } 
             50% { transform: translateY(5px) scale(1.02); } 
@@ -356,7 +339,15 @@
             "จองห้อง Sharing Room (3 ชม.)", "จองห้อง Mini Theatre (3 ชม.)", 
             "สิทธิ์การใช้งาน AI (คละแบบ)", "ยืมหนังสือเพิ่ม 1 เท่า", "รางวัลพิเศษ"
         ];
-        const badWords = ["kuy", "fck", "shit", "bitch", "asshole", "fuck", "ควย", "เหี้ย", "สัส", "เย็ด", "มึง", "กู", "เลว", "โง่"];
+        
+        // --- 🛑 โซนกรองคำหยาบ (Profanity Filter) ---
+        // เพิ่มคำที่ต้องการแบนลงใน [ ] ได้เลยครับ
+        const badWords = [
+            "kuy", "fck", "shit", "bitch", "asshole", "fuck", "dick", "pussy", "bastard",
+            "ควย", "เหี้ย", "สัส", "เย็ด", "มึง", "กู", "เลว", "โง่", "ชั่ว", "นรก", "ระยำ", 
+            "flower", "ดอกทอง", "แม่ง", "ไอ้สัตว์", "อีสัตว์", "พ่อมึงตาย", "แม่มึงตาย",
+            "สันดาน", "อัปรีย์", "จัญไร"
+        ];
 
         let allMessages = [];       
         let newMessagesQueue = [];
@@ -380,9 +371,11 @@
         const scrollingContent = document.getElementById('scrolling-content');
         const totalCountEl = document.getElementById('total-count');
 
+        // ฟังก์ชันเช็คคำหยาบ
         function containsBadWords(text) {
             if (!text) return false;
-            return badWords.some(word => text.toLowerCase().includes(word));
+            const lowerText = text.toLowerCase();
+            return badWords.some(word => lowerText.includes(word));
         }
 
         function formatMessage(data) {
@@ -525,6 +518,7 @@
                 if (!error && data && data.length > 0) {
                     let realMessages = [];
                     data.forEach(item => {
+                        // กรองคำหยาบก่อนแสดงผล
                         if (!containsBadWords(item.message)) {
                             realMessages.push(formatMessage(item));
                         }
@@ -544,6 +538,7 @@
                     totalCountEl.innerText = totalUsers.toLocaleString();
 
                     const newItem = payload.new;
+                    // กรองคำหยาบก่อนเพิ่มเข้าคิว
                     if (!containsBadWords(newItem.message)) {
                         const formatted = formatMessage(newItem);
                         newMessagesQueue.push(formatted);
