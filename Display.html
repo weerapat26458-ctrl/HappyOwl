@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Event: Happy Owl (AIO Version)</title>
+    <title>Unbox Happiness @OWL</title>
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     
     <style>
@@ -12,9 +12,11 @@
         body { 
             margin: 0; overflow: hidden; 
             background-color: #0b1026; 
+            
+            /* กลับมาใช้ cover เพื่อสัดส่วนภาพที่ถูกต้อง (ไม่ยืด) */
             background-image: 
                 radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.4) 100%),
-                url('https://media.discordapp.net/attachments/1460827312080556032/1461184792367337472/S__36110343.png?ex=6969a1e2&is=69685062&hm=2979901686588bdcf06e2652d6097e4fefa1702ade9fb8dbfff1a367e9f12597&=&format=webp&quality=lossless&width=1209&height=680');
+                url('https://media.discordapp.net/attachments/1460827312080556032/1460892038470959125/12.png?ex=6968913c&is=69673fbc&hm=8c90589d6c7c7440917efea51822acd395d4f345cf7b5291cf196b15e4d24fc4&=&format=webp&quality=lossless&width=961&height=680');
             background-size: cover; 
             background-position: center; 
             background-repeat: no-repeat;
@@ -54,7 +56,9 @@
         }
         .main-title {
             font-family: 'Chakra Petch', sans-serif; 
-            font-size: 5rem; font-weight: 700; font-style: italic; 
+            /* ลดขนาดลงนิดหน่อยเพื่อให้ข้อความยาวๆ ใส่ได้พอดี */
+            font-size: 3.2rem; 
+            font-weight: 700; font-style: italic; 
             margin: 0; line-height: 1; text-transform: uppercase; letter-spacing: 2px;
             background: linear-gradient(180deg, #ffffff 30%, #4facfe 100%);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
@@ -115,23 +119,16 @@
             50% { transform: translateY(-8px); }
         }
 
-        /* --- LEFT PANEL: CONTROL / QR --- */
+        /* --- LEFT PANEL: QR CODE --- */
         .qr-panel {
             position: absolute; top: 60%; left: 5%; 
             transform: translateY(-50%); width: 260px;
             background: rgba(10, 20, 40, 0.5); backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2); 
             border-top: 1px solid #ffd700; border-bottom: 1px solid #00f2fe;
-            border-radius: 20px; padding: 20px; text-align: center; z-index: 60;
+            border-radius: 20px; padding: 20px; text-align: center; z-index: 55;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             animation: floatPanelLeft 6s ease-in-out infinite;
-            cursor: pointer; /* ทำให้รู้ว่ากดได้ */
-            transition: 0.3s;
-        }
-        .qr-panel:hover {
-            transform: translateY(-50%) scale(1.05);
-            background: rgba(10, 20, 40, 0.8);
-            box-shadow: 0 0 20px rgba(0, 242, 254, 0.5);
         }
         @keyframes floatPanelLeft {
             0%, 100% { transform: translateY(-50%) translateY(0px); }
@@ -141,11 +138,6 @@
         .qr-subtitle { font-size: 0.9rem; color: #cbd5e1; margin-bottom: 15px; font-weight: 300; }
         .qr-image-box { background: white; padding: 8px; border-radius: 10px; display: inline-block; box-shadow: 0 0 15px rgba(255,215,0,0.3); }
         .qr-image-box img { width: 160px; height: 160px; display: block; }
-        /* เปลี่ยนไอคอน QR เป็นปุ่มแทน */
-        .action-icon {
-            font-size: 4rem; margin: 20px 0; display: block;
-            text-shadow: 0 0 20px #00f2fe;
-        }
 
         /* --- RIGHT PANEL: LIMITED WINNERS --- */
         .limited-panel {
@@ -260,10 +252,12 @@
         /* === VIP STYLES (Limited Base) === */
         .msg-box.limited-card {
             background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
-            border: 1px solid #bfa35f; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+            /* แก้ไขความหนาเส้นขอบเป็น 1.5px */
+            border: 1.5px solid #bfa35f; 
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
             position: relative; overflow: hidden; border-radius: 16px;
         }
-        /* Shimmer for Limited Card */
+        /* Shimmer for Limited Card (Standard White Sweep) */
         .msg-box.limited-card::after {
             content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
             background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%);
@@ -277,7 +271,10 @@
         .crown-badge { position: absolute; top: -14px; left: -8px; font-size: 24px; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.8)); transform: rotate(-15deg); animation: crownBounce 2s infinite ease-in-out; z-index: 10; }
         @keyframes crownBounce { 0%, 100% { transform: rotate(-15deg) translateY(0); } 50% { transform: rotate(-15deg) translateY(-3px); } }
 
-        /* === LEVEL SYSTEM STYLES === */
+        /* ========================================= */
+        /* === LEVEL SYSTEM STYLES (THEME FOCUSED) === */
+        /* ========================================= */
+        
         .lv-badge {
             position: absolute; top: 0; right: 0;
             padding: 3px 12px; border-bottom-left-radius: 12px;
@@ -286,7 +283,7 @@
             z-index: 5;
         }
 
-        /* LV 5 */
+        /* LV 5 : Soft Jade */
         .msg-box.lv-5 {
             background: #f0fdf9 !important; border: 1px solid #99f6e4 !important; 
             box-shadow: 0 2px 6px rgba(153, 246, 228, 0.3) !important;
@@ -296,7 +293,7 @@
         .msg-box.lv-5 .msg-img { border-color: #5eead4 !important; }
         .lv-badge.bg-lv5 { background-color: #5eead4; color: #134e4a; }
 
-        /* LV 10 */
+        /* LV 10 : Soft Indigo */
         .msg-box.lv-10 {
             background: #f5f3ff !important; border: 1px solid #a78bfa !important;
             box-shadow: 0 2px 6px rgba(167, 139, 250, 0.3) !important;
@@ -306,66 +303,164 @@
         .msg-box.lv-10 .msg-img { border-color: #a78bfa !important; }
         .lv-badge.bg-lv10 { background-color: #8b5cf6; color: white; }
 
-        /* LV MAX */
+        /* LV 15+ (MAX) : REAL RAINBOW BORDER (FIXED) */
         .msg-box.lv-max {
-            background: #ffffff !important; border: none !important;
-            position: relative; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important; z-index: 0; border-radius: 16px;
+            background: #ffffff !important; /* พื้นหลังขาว */
+            border: none !important; /* ลบเส้นขอบปกติ */
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important; /* เงาบางๆ พอ */
+            z-index: 0; 
+            border-radius: 16px;
         }
+
+        /* สร้างเส้นขอบรุ้งโดยใช้เทคนิค Mask (เจาะรูตรงกลาง) */
         .msg-box.lv-max::before {
-            content: ""; position: absolute; inset: 0; padding: 3px; border-radius: 16px;
+            content: "";
+            position: absolute;
+            inset: 0; /* เต็มพื้นที่ */
+            padding: 3px; /* ความหนาของเส้นขอบ */
+            border-radius: 16px; /* มุมโค้งต้องเท่ากับกล่อง */
+            
+            /* สีรุ้ง + อนิเมชั่น */
             background: linear-gradient(124deg, #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, #1ddde8, #2b1de8, #dd00f3, #dd00f3);
-            background-size: 300% 300%; animation: rainbowAnim 3s ease infinite;
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; z-index: 2;
+            background-size: 300% 300%;
+            animation: rainbowAnim 3s ease infinite;
+
+            /* เทคนิคเจาะรูตรงกลางเพื่อให้เห็นพื้นหลังขาวของกล่องแม่ */
+            -webkit-mask: 
+                linear-gradient(#fff 0 0) content-box, 
+                linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            
+            pointer-events: none;
+            z-index: 2; /* อยู่บนสุด */
         }
+        
         .msg-box.lv-max .msg-text { color: #1a1a1a !important; font-weight: 600 !important; }
-        .msg-box.lv-max .msg-name { background: linear-gradient(90deg, #ff0000, #002bff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800 !important; }
+        .msg-box.lv-max .msg-name { 
+            background: linear-gradient(90deg, #ff0000, #002bff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800 !important; 
+        }
         .msg-box.lv-max .msg-img { border: 2px solid #FFD700 !important; }
 
+        /* COMMON RAINBOW ANIMATION */
         @keyframes rainbowAnim { 
             0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%}
         }
         .lv-badge.bg-max { 
             background: linear-gradient(124deg, #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, #1ddde8, #2b1de8, #dd00f3, #dd00f3);
-            background-size: 400% 400%; animation: rainbowAnim 3s ease infinite; color: white; font-weight: 900;
+            background-size: 400% 400%; animation: rainbowAnim 3s ease infinite;
+            color: white; font-weight: 900;
         }
 
-        /* JFF CORP */
+        /* ========================================= */
+        /* === JFF CORP'S EXCLUSIVE NEON STYLE (UPDATED) === */
+        /* ========================================= */
         .msg-box.jff-style {
+            /* พื้นหลังสีมืด + ตาราง Grid */
             background: rgba(10, 5, 20, 0.95) !important;
-            background-image: linear-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px) !important;
-            background-size: 20px 20px !important; border: none !important; border-radius: 12px !important;
-            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3), inset 0 0 20px rgba(255, 0, 222, 0.1) !important; position: relative; overflow: hidden; z-index: 1;
+            background-image:
+                linear-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px) !important;
+            background-size: 20px 20px !important;
+
+            /* 1. ลบเส้นขอบปกติออก เพื่อใช้ Animated Border แทน */
+            border: none !important;
+            border-radius: 12px !important;
+            
+            /* แสงฟุ้ง (Glow) */
+            box-shadow: 
+                0 0 10px rgba(0, 255, 255, 0.3),
+                inset 0 0 20px rgba(255, 0, 222, 0.1) !important;
+
+            position: relative; 
+            overflow: hidden; 
+            z-index: 1;
         }
+
+        /* 2. สร้างเส้นขอบ Neon วิ่งได้ (Mask Technique) */
         .msg-box.jff-style::before {
-            content: ""; position: absolute; inset: 0; padding: 2px; border-radius: 12px;
+            content: "";
+            position: absolute;
+            inset: 0;
+            padding: 2px; /* ความหนาเส้นขอบ */
+            border-radius: 12px;
+            
+            /* Gradient สี Neon (ฟ้า-ชมพู-ม่วง) */
             background: linear-gradient(90deg, #00ffff, #ff00de, #5100ff, #00ffff);
-            background-size: 300% 300%; animation: rainbowAnim 2s linear infinite;
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; z-index: 2;
+            background-size: 300% 300%;
+            animation: rainbowAnim 2s linear infinite; /* วิ่งเร็วกว่าปกติหน่อย */
+            
+            -webkit-mask: 
+                linear-gradient(#fff 0 0) content-box, 
+                linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            
+            pointer-events: none;
+            z-index: 2;
         }
+
+        /* 3. Shimmer Effect สีขาว (เหมือน Limited/VIP) */
         .msg-box.jff-style::after {
             content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            /* ใช้สูตรเดียวกับ limited-card เป๊ะๆ */
             background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%);
-            transform: rotate(30deg); animation: shineMove 2.5s infinite; pointer-events: none; z-index: 3; mix-blend-mode: normal;
+            transform: rotate(30deg); animation: shineMove 2.5s infinite; pointer-events: none;
+            z-index: 3; /* อยู่บนสุด */
+            mix-blend-mode: normal; /* เปลี่ยนกลับเป็น Normal เพื่อให้เห็นสีขาวชัดเจน */
         }
+
+        /* ตกแต่งแถบสีชมพูคาด */
         .jff-decor-bar {
-            position: absolute; left: 50%; transform: translateX(-50%); width: 40%; height: 3px; background: #ff00de; box-shadow: 0 0 10px #ff00de; border-radius: 2px; z-index: 2;
+            position: absolute; left: 50%; transform: translateX(-50%);
+            width: 40%; height: 3px; background: #ff00de;
+            box-shadow: 0 0 10px #ff00de;
+            border-radius: 2px;
+            z-index: 2;
         }
         .jff-decor-top { top: 0; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; } 
         .jff-decor-bottom { bottom: 0; border-top-left-radius: 5px; border-top-right-radius: 5px; }
-        .msg-box.jff-style .msg-text { color: #ffffff !important; text-shadow: 0 0 5px rgba(0, 255, 255, 0.6); font-family: 'Chakra Petch', sans-serif; font-weight: 500; }
-        .msg-box.jff-style .msg-name { color: #00ffff !important; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 0 10px #00ffff !important; background: none !important; -webkit-text-fill-color: #00ffff !important; }
-        .msg-box.jff-style .msg-img { border: 2px solid #00ffff !important; box-shadow: 0 0 10px #ff00de !important; border-radius: 8px !important; }
+
+        /* ปรับสีตัวอักษร */
+        .msg-box.jff-style .msg-text { 
+            color: #ffffff !important; 
+            text-shadow: 0 0 5px rgba(0, 255, 255, 0.6); 
+            font-family: 'Chakra Petch', sans-serif; font-weight: 500;
+        }
+        .msg-box.jff-style .msg-name { 
+            color: #00ffff !important; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+            text-shadow: 0 0 10px #00ffff !important;
+            background: none !important; -webkit-text-fill-color: #00ffff !important;
+        }
+        .msg-box.jff-style .msg-img {
+            border: 2px solid #00ffff !important; 
+            box-shadow: 0 0 10px #ff00de !important;
+            border-radius: 8px !important;
+        }
+        
+        /* แก้ไข Badge DEV (สีวิ่ง + ตัวหนังสือเลื่อม) */
         .msg-box.jff-style .lv-badge.bg-dev {
-            top: 0; right: 0; border-top-right-radius: 8px; clip-path: none; padding: 4px 10px;
+            top: 0; right: 0;
+            border-top-right-radius: 8px; /* ให้เข้ามุมกับกล่อง */
+            clip-path: none; /* เอา clip-path ออกเพื่อกันบัค */
+            padding: 4px 10px;
+
+            /* พื้นหลังสีวิ่ง Neon */
             background: linear-gradient(90deg, #00ffff, #5100ff, #ff00de, #00ffff);
-            background-size: 300% 100%; animation: rainbowAnim 3s linear infinite;
-            text-shadow: 0 1px 3px rgba(255, 255, 255, 0.9); color: #ffffff;
-            box-shadow: 0 0 15px rgba(0, 255, 255, 0.8); font-weight: 900; letter-spacing: 1px; z-index: 10;
+            background-size: 300% 100%;
+            animation: rainbowAnim 3s linear infinite;
+            
+            /* ตัวหนังสือเลื่อม */
+            text-shadow: 0 1px 3px rgba(255, 255, 255, 0.9);
+            color: #ffffff;
+            
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
+            font-weight: 900; letter-spacing: 1px;
+            z-index: 10;
         }
 
-        /* --- OWL MASCOT --- */
+        /* --- OWL MASCOT (Bottom Align) --- */
         .owl-container { 
             position: fixed; bottom: -30px; left: 50%; transform: translateX(-50%); 
             width: 450px; z-index: 9999; pointer-events: none; line-height: 0; 
@@ -379,51 +474,6 @@
             0%, 100% { transform: translateY(0) scale(1); } 
             50% { transform: translateY(5px) scale(1.02); } 
         }
-
-        /* ============================ */
-        /* === NEW: INPUT MODAL UI === */
-        /* ============================ */
-        .input-modal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85); z-index: 10000;
-            justify-content: center; align-items: center;
-        }
-        .modal-content {
-            background: #1e293b; border: 2px solid #00f2fe; border-radius: 20px;
-            padding: 30px; width: 90%; max-width: 400px;
-            box-shadow: 0 0 40px rgba(0, 242, 254, 0.5);
-            text-align: center; position: relative;
-            animation: popIn 0.3s ease-out;
-        }
-        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        
-        .modal-title { font-family: 'Chakra Petch'; font-size: 2rem; color: #ffd700; margin-bottom: 20px; text-transform: uppercase; }
-        .input-group { margin-bottom: 15px; text-align: left; }
-        .input-group label { display: block; color: #94a3b8; margin-bottom: 5px; font-size: 0.9rem; }
-        .input-field {
-            width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #475569;
-            background: #0f172a; color: white; font-family: 'Kanit'; font-size: 1rem;
-            box-sizing: border-box; outline: none; transition: 0.3s;
-        }
-        .input-field:focus { border-color: #00f2fe; box-shadow: 0 0 10px rgba(0, 242, 254, 0.3); }
-        
-        .btn-send {
-            width: 100%; padding: 15px; border-radius: 50px; border: none;
-            background: linear-gradient(90deg, #00c6ff, #0072ff);
-            color: white; font-size: 1.2rem; font-weight: bold; cursor: pointer;
-            margin-top: 10px; transition: 0.3s;
-        }
-        .btn-send:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(0, 114, 255, 0.6); }
-        .btn-close {
-            position: absolute; top: 10px; right: 15px; font-size: 2rem; color: #64748b;
-            cursor: pointer; background: none; border: none;
-        }
-        .btn-close:hover { color: white; }
-
-        /* Reward Popup Inside Modal */
-        .reward-result { margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 10px; display: none; }
-        .reward-val { font-size: 1.5rem; color: #00f2fe; font-weight: bold; margin-top: 5px; }
-
     </style>
 </head>
 <body>
@@ -439,7 +489,7 @@
     </div>
 
     <div class="header-container">
-        <h1 class="main-title">AI EVENT : HAPPY OWL</h1>
+        <h1 class="main-title">Unbox Happiness @OWL : Just share it</h1>
         <div class="main-subtitle">ส่งต่อความสุขที่ OWL</div>
         <div class="header-line"></div>
     </div>
@@ -451,11 +501,12 @@
         </div>
     </div>
 
-    <div class="qr-panel" onclick="openInputModal()">
-        <div class="qr-title">CLICK TO JOIN</div>
-        <div class="qr-subtitle">คลิกที่นี่เพื่อส่งข้อความ</div>
-        <div class="action-icon">🚀</div>
-        <div style="font-size: 0.8rem; color: #ffd700;">(All-in-One Mode)</div>
+    <div class="qr-panel">
+        <div class="qr-title">SCAN TO JOIN</div>
+        <div class="qr-subtitle">สแกนเพื่อส่งข้อความขึ้นจอ</div>
+        <div class="qr-image-box">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://weerapat26458-ctrl.github.io/HappyOwl/Usersdisplay.html" alt="Scan QR">
+        </div>
     </div>
 
     <div class="limited-panel">
@@ -480,31 +531,6 @@
 
     <div class="owl-container">
         <img src="https://media.discordapp.net/attachments/1460827312080556032/1460899620686135296/ChatGPT_Image_14_.._2569_14_31_23.png?ex=6968984b&is=696746cb&hm=24aef68b14cb0fc469388f9605e2e47da933717b6026857e849417c22bd4d97e&=&format=webp&quality=lossless&width=1061&height=680" alt="Happy Owl">
-    </div>
-
-    <div id="inputModal" class="input-modal">
-        <div class="modal-content">
-            <button class="btn-close" onclick="closeInputModal()">&times;</button>
-            <div class="modal-title">ส่งข้อความ</div>
-            
-            <div id="inputForm">
-                <div class="input-group">
-                    <label>ชื่อของคุณ (Name)</label>
-                    <input type="text" id="senderName" class="input-field" placeholder="กรอกชื่อเล่น..." maxlength="20">
-                </div>
-                <div class="input-group">
-                    <label>ข้อความ (Message)</label>
-                    <input type="text" id="senderMsg" class="input-field" placeholder="คำอวยพร..." maxlength="80">
-                </div>
-                <button class="btn-send" onclick="submitMessage()">🎁 ส่ง & ลุ้นรางวัล</button>
-            </div>
-
-            <div id="resultArea" class="reward-result">
-                <div style="color:white;">ยินดีด้วย! คุณได้รับ</div>
-                <div id="rewardValue" class="reward-val">...</div>
-                <button class="btn-send" style="background:#475569; margin-top:20px;" onclick="resetModal()">ส่งอีกครั้ง</button>
-            </div>
-        </div>
     </div>
 
     <script>
@@ -532,7 +558,6 @@
         let newMessagesQueue = [];
         let allLimitedWinners = []; 
         let totalUsers = 0; 
-        let userLevelMap = {};
         
         // Demo Messages
         const demoMessages = [
@@ -544,7 +569,6 @@
             { text: "Happy New Year!", name: "User B", image: "https://cdn-icons-png.flaticon.com/512/3135/3135768.png", isLimited: true, reward: "รางวัลพิเศษ", level: 0 }
         ];
 
-        // UI Elements
         const staticLeft = document.getElementById('static-left');
         const staticRight = document.getElementById('static-right');
         const flipper = document.getElementById('flipper');
@@ -552,73 +576,8 @@
         const flipBackContent = document.getElementById('flip-back-content');
         const scrollingContent = document.getElementById('scrolling-content');
         const totalCountEl = document.getElementById('total-count');
-
-        // Modal Elements
-        const modal = document.getElementById('inputModal');
-        const inputForm = document.getElementById('inputForm');
-        const resultArea = document.getElementById('resultArea');
-        const rewardValue = document.getElementById('rewardValue');
-
-        // --- AIO LOGIC: OPEN MODAL ---
-        function openInputModal() {
-            modal.style.display = 'flex';
-            resetModal();
-        }
-        function closeInputModal() {
-            modal.style.display = 'none';
-        }
-        function resetModal() {
-            inputForm.style.display = 'block';
-            resultArea.style.display = 'none';
-            document.getElementById('senderName').value = '';
-            document.getElementById('senderMsg').value = '';
-        }
-
-        // --- AIO LOGIC: SUBMIT & PROBABILITY ---
-        async function submitMessage() {
-            const name = document.getElementById('senderName').value.trim();
-            const msg = document.getElementById('senderMsg').value.trim();
-
-            if(!name || !msg) { alert("กรุณากรอกข้อมูลให้ครบ"); return; }
-            if(containsBadWords(name) || containsBadWords(msg)) { alert("กรุณาใช้คำสุภาพ"); return; }
-
-            // === 0.75% Probability Logic Here ===
-            let myReward = "ลูกอม";
-            const chance = Math.random() * 100; // 0 - 100
-            
-            if (chance <= 0.75) { // 0.75% Chance
-                const rIndex = Math.floor(Math.random() * limitedRewards.length);
-                myReward = limitedRewards[rIndex];
-            }
-
-            // Insert to Supabase
-            const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-            const { error } = await supabase.from('HappyOwl_messages').insert([
-                { 
-                    name: name, 
-                    message: msg, 
-                    reward: myReward,
-                    image_url: `https://api.dicebear.com/7.x/avataaars/svg?seed=${name}` 
-                }
-            ]);
-
-            if(error) {
-                alert("Error: " + error.message);
-            } else {
-                // Show Result in Modal
-                inputForm.style.display = 'none';
-                resultArea.style.display = 'block';
-                rewardValue.innerText = myReward;
-                
-                if(myReward !== "ลูกอม") {
-                    rewardValue.style.color = "#FFD700";
-                    rewardValue.innerHTML = "👑 " + myReward + " 👑";
-                } else {
-                    rewardValue.style.color = "#00f2fe";
-                    rewardValue.innerHTML = "🍬 " + myReward;
-                }
-            }
-        }
+        
+        let userLevelMap = {};
 
         function containsBadWords(text) {
             if (!text) return false;
@@ -842,23 +801,49 @@
                 updateScrollingBoard();
                 initBook(); 
                 
+                // Realtime Sync Listener (INSERT & DELETE)
                 supabase.channel('realtime-book')
-                .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'HappyOwl_messages' }, async (payload) => {
-                    totalUsers++;
-                    totalCountEl.innerText = totalUsers.toLocaleString();
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'HappyOwl_messages' }, async (payload) => {
+                    
+                    if (payload.eventType === 'INSERT') {
+                        // --- Handle New Message ---
+                        totalUsers++;
+                        totalCountEl.innerText = totalUsers.toLocaleString();
 
-                    const newItem = payload.new;
-                    if (!containsBadWords(newItem.message)) {
-                        const freshCount = await fetchUserCount(newItem.name);
-                        userLevelMap[newItem.name] = freshCount;
+                        const newItem = payload.new;
+                        if (!containsBadWords(newItem.message)) {
+                            const freshCount = await fetchUserCount(newItem.name);
+                            userLevelMap[newItem.name] = freshCount;
 
-                        const formatted = formatMessage(newItem, freshCount);
-                        newMessagesQueue.push(formatted);
-                        allMessages.push(formatted);
+                            const formatted = formatMessage(newItem, freshCount);
+                            newMessagesQueue.push(formatted);
+                            allMessages.push(formatted);
 
-                        if (formatted.isLimited) {
-                            allLimitedWinners.unshift(formatted); 
-                            updateScrollingBoard(); 
+                            if (formatted.isLimited) {
+                                allLimitedWinners.unshift(formatted); 
+                                updateScrollingBoard(); 
+                            }
+                        }
+                    } 
+                    else if (payload.eventType === 'DELETE') {
+                        // --- Handle Delete (Sync Admin) ---
+                        const deletedId = payload.old.id;
+                        
+                        // 1. Remove from local arrays
+                        allMessages = allMessages.filter(m => m.id !== deletedId);
+                        newMessagesQueue = newMessagesQueue.filter(m => m.id !== deletedId);
+                        
+                        // 2. Remove from Winners list if present
+                        const wasWinner = allLimitedWinners.some(m => m.id === deletedId);
+                        if (wasWinner) {
+                            allLimitedWinners = allLimitedWinners.filter(m => m.id !== deletedId);
+                            updateScrollingBoard();
+                        }
+
+                        // 3. Decrease Count
+                        if (totalUsers > 0) {
+                            totalUsers--;
+                            totalCountEl.innerText = totalUsers.toLocaleString();
                         }
                     }
                 })
