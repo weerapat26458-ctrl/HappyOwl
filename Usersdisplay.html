@@ -244,13 +244,13 @@
         const supabaseUrl = 'https://kgyhqwgpeyfszowdrhbd.supabase.co';
         const supabaseKey = 'sb_publishable_DgFCEd6iMOogHTNtr4ht-Q_4SAn8FBN'; 
 
-        // 🎰 LOGIC (ความเกลือ 2.5%)
+        // 🎰 LOGIC (ปรับเรท 1% เป๊ะ)
         const LIMIT_PER_MONTH = 5;
         const LIMITED_REWARDS = [
-            { name: "จองห้อง Sharing Room (3 ชม.)", type: "limited", weight: 2.5 },
-            { name: "จองห้อง Mini Theatre (3 ชม.)", type: "limited", weight: 2.5 },
-            { name: "สิทธิ์การใช้งาน AI (คละแบบ)", type: "limited", weight: 2.5 },
-            { name: "ยืมหนังสือเพิ่ม 1 เท่า", type: "limited", weight: 2.5 }
+            { name: "จองห้อง Sharing Room (3 ชม.)", type: "limited", weight: 0.25 },
+            { name: "จองห้อง Mini Theatre (3 ชม.)", type: "limited", weight: 0.25 },
+            { name: "สิทธิ์การใช้งาน AI (คละแบบ)", type: "limited", weight: 0.25 },
+            { name: "ยืมหนังสือเพิ่ม 1 เท่า", type: "limited", weight: 0.25 }
         ];
         const CONSOLATION_REWARD = { name: "ลูกอม / จูบาจุ๊บ 🍭", type: "consolation" };
 
@@ -323,7 +323,7 @@
                         margin: 15, 
                         loop: false,      
                         autoWidth: false, 
-                        items: 1.2,       
+                        items: 1.2,        
                         nav: true,        
                         dots: false,      
                         autoplay: true,
@@ -336,7 +336,8 @@
         }
 
         async function checkStockAndGetReward() {
-            let pool = [...LIMITED_REWARDS, { ...CONSOLATION_REWARD, weight: 90 }]; 
+            // ปรับ weight ของรางวัลปลอบใจเป็น 99 เพื่อให้รวม Limited 1 คะแนน ได้ 100 พอดี
+            let pool = [...LIMITED_REWARDS, { ...CONSOLATION_REWARD, weight: 99 }]; 
             let totalWeight = pool.reduce((sum, item) => sum + item.weight, 0);
             let randomNum = Math.random() * totalWeight;
             
