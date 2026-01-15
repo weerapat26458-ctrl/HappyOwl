@@ -10,22 +10,23 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
         body {
             font-family: 'Kanit', sans-serif;
             /* --- ใส่รูป Background ตรงนี้ --- */
             background: url('Gemini_Generated_Image_l9iv8ol9iv8ol9iv.png') no-repeat center center fixed;
-            background-size: cover; /* ให้รูปเต็มจอ */
+            background-size: cover;
             
             color: #1c1c1e;
             -webkit-tap-highlight-color: transparent;
             padding-bottom: 40px;
         }
 
-        /* App Bar (เพิ่มความทึบแสงนิดหน่อยให้อ่านง่ายขึ้นบนพื้นหลังรูป) */
+        /* App Bar */
         .app-bar {
-            background: rgba(255, 255, 255, 0.85); /* พื้นหลังขาวโปร่งแสง */
+            background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid rgba(255,255,255,0.3);
@@ -40,9 +41,9 @@
 
         /* Form Card */
         .app-card {
-            background: rgba(255, 255, 255, 0.95); /* การ์ดขาวโปร่งแสงนิดๆ */
+            background: rgba(255, 255, 255, 0.95);
             border-radius: 16px;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15); /* Glassmorphism Shadow */
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
             padding: 20px;
             margin-bottom: 20px;
             border: 1px solid rgba(255, 255, 255, 0.18);
@@ -140,25 +141,44 @@
         }
         .gacha-overlay.active { opacity: 1; visibility: visible; }
         
-        .egg-wrapper { font-size: 120px; cursor: pointer; filter: drop-shadow(0 0 30px rgba(255,255,255,0.3)); transition: 0.3s; }
+        /* ปรับปรุง CSS ของไข่ */
+        .egg-wrapper { 
+            font-size: 130px; 
+            cursor: pointer; 
+            filter: drop-shadow(0 0 40px rgba(255,255,255,0.4)); 
+            transition: transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
         .egg-wrapper:active { transform: scale(0.9); }
-        .egg-shake { animation: shake 0.5s infinite; }
+
+        /* Animation: สั่นแรงๆ แบบดุ้ง */
+        @keyframes hard-shake {
+            0% { transform: rotate(0deg) scale(1); }
+            20% { transform: rotate(-15deg) scale(1.1); }
+            40% { transform: rotate(15deg) scale(0.9); }
+            60% { transform: rotate(-15deg) scale(1.1); }
+            80% { transform: rotate(15deg) scale(0.9); }
+            100% { transform: rotate(0deg) scale(1); }
+        }
+        
+        /* Animation: ระเบิดแตก */
+        @keyframes explode-fade {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 1; filter: brightness(2); }
+            100% { transform: scale(2.5); opacity: 0; filter: blur(10px); }
+        }
+
+        .egg-shake { animation: hard-shake 0.4s ease-in-out; }
+        .egg-pop { animation: explode-fade 0.5s forwards ease-out; pointer-events: none; }
         
         .result-modal {
             background: white; width: 85%; max-width: 320px;
             border-radius: 20px; padding: 24px; text-align: center;
             transform: scale(0.8); opacity: 0; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             display: none; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            position: relative; z-index: 102;
         }
         .result-modal.show { transform: scale(1); opacity: 1; display: block; }
 
-        @keyframes shake {
-            0%, 100% { transform: rotate(0deg); }
-            25% { transform: rotate(-10deg); }
-            75% { transform: rotate(10deg); }
-        }
-
-        /* Feed Title with Glass Background */
         .feed-title {
             background: rgba(255,255,255,0.7);
             backdrop-filter: blur(5px);
@@ -217,18 +237,24 @@
     </div>
 
     <div class="gacha-overlay" id="gachaOverlay">
-        <div class="text-white text-lg font-bold mb-8 animate-pulse" id="instructionText" style="text-shadow: 0 2px 4px rgba(0,0,0,0.5);">แตะที่ไข่เพื่อเปิด!</div>
+        <div class="text-white text-xl font-bold mb-8 animate-bounce transition-all duration-200" id="instructionText" style="text-shadow: 0 2px 4px rgba(0,0,0,0.5);">
+            แตะที่ไข่เพื่อเปิด!
+        </div>
         
         <div class="egg-wrapper" id="eggWrapper">🥚</div>
 
         <div class="result-modal" id="resultModal">
-            <div class="text-5xl mb-3">🎉</div>
+            <div class="text-5xl mb-3 animate-bounce">🎉</div>
             <h3 class="text-xl font-bold text-gray-800 mb-1">ยินดีด้วย!</h3>
             <div class="text-gray-500 text-sm mb-4">คุณได้รับรางวัล</div>
             
-            <div class="bg-blue-50 rounded-xl p-4 mb-5 border border-blue-100">
+            <div class="bg-blue-50 rounded-xl p-4 mb-2 border border-blue-100">
                 <div class="text-lg font-bold text-blue-600 mb-1 leading-tight" id="resultName">...</div>
                 <div class="badge" id="resultBadge">...</div>
+            </div>
+            
+            <div class="text-xs text-red-500 font-medium mb-5 italic border-t border-dashed pt-2 mt-2">
+                *ติดต่อพี่ๆ floor supervisor @OWL*
             </div>
 
             <button onclick="closeGacha()" class="app-btn bg-gray-900 text-white shadow-none">ตกลง</button>
@@ -244,7 +270,7 @@
         const supabaseUrl = 'https://kgyhqwgpeyfszowdrhbd.supabase.co';
         const supabaseKey = 'sb_publishable_DgFCEd6iMOogHTNtr4ht-Q_4SAn8FBN'; 
 
-        // 🎰 LOGIC (ปรับเรท 1% เป๊ะ)
+        // 🎰 LOGIC (ปรับเรท 1% เป๊ะ ตามโค้ดล่าสุดของคุณ)
         const LIMIT_PER_MONTH = 5;
         const LIMITED_REWARDS = [
             { name: "จองห้อง Sharing Room (3 ชม.)", type: "limited", weight: 0.25 },
@@ -262,6 +288,7 @@
         }
 
         let currentReward = null;
+        let eggClickCount = 0; // ตัวนับจำนวนการกดไข่
 
         $(document).ready(function(){
             if(!mySupabase) return;
@@ -323,7 +350,7 @@
                         margin: 15, 
                         loop: false,      
                         autoWidth: false, 
-                        items: 1.2,        
+                        items: 1.2,       
                         nav: true,        
                         dots: false,      
                         autoplay: true,
@@ -411,7 +438,9 @@
 
                 document.getElementById('userForm').reset();
                 updateFileName(document.getElementById('image'));
-                openGacha();
+                
+                // ใช้ฟังก์ชันใหม่ที่เป็นระบบ 3 จังหวะ
+                initGachaSystem();
 
             } catch (err) {
                 alert("เกิดข้อผิดพลาด: " + err.message);
@@ -421,24 +450,69 @@
             }
         });
 
-        function openGacha() {
+        // --- GACHA LOGIC UPDATE (3 TAPS & CONFETTI) ---
+        function initGachaSystem() {
             const overlay = document.getElementById('gachaOverlay');
             const egg = document.getElementById('eggWrapper');
             const text = document.getElementById('instructionText');
             
-            overlay.classList.add('active');
+            eggClickCount = 0; // Reset
+            egg.className = 'egg-wrapper'; // Reset class
             egg.style.display = 'block';
             text.style.display = 'block';
+            text.innerText = "แตะที่ไข่เพื่อเปิด!";
             
-            egg.onclick = () => {
-                egg.onclick = null;
-                egg.classList.add('egg-shake');
-                setTimeout(() => {
-                    egg.style.display = 'none';
-                    text.style.display = 'none';
-                    showResult();
-                }, 1000);
+            overlay.classList.add('active');
+            
+            // Remove old listeners to prevent duplicates
+            let newEgg = egg.cloneNode(true);
+            egg.parentNode.replaceChild(newEgg, egg);
+            
+            newEgg.addEventListener('click', function() {
+                eggClickCount++;
+                
+                // Reset Animation Reflow
+                newEgg.classList.remove('egg-shake');
+                void newEgg.offsetWidth; 
+
+                if (eggClickCount < 3) {
+                    // จังหวะที่ 1 และ 2: สั่นดุ้งๆ
+                    newEgg.classList.add('egg-shake');
+                    text.innerText = eggClickCount === 1 ? "อีกนิดนึง!" : "จะแตกแล้ว!";
+                    text.style.transform = `scale(${1 + (eggClickCount * 0.1)})`;
+                } else {
+                    // จังหวะที่ 3: แตก!
+                    text.innerText = "แตกแล้ว!!";
+                    newEgg.classList.add('egg-pop'); // ระเบิดหายไป
+                    
+                    setTimeout(() => {
+                        newEgg.style.display = 'none';
+                        text.style.display = 'none';
+                        showResult();
+                        triggerConfetti(); // ยิงพลุ
+                    }, 400); // รอ animation ระเบิดสักครู่
+                }
+            });
+        }
+
+        // ฟังก์ชันยิงพลุกระดาษ
+        function triggerConfetti() {
+            var count = 200;
+            var defaults = {
+                origin: { y: 0.7 }
             };
+
+            function fire(particleRatio, opts) {
+                confetti(Object.assign({}, defaults, opts, {
+                    particleCount: Math.floor(count * particleRatio)
+                }));
+            }
+
+            fire(0.25, { spread: 26, startVelocity: 55, });
+            fire(0.2, { spread: 60, });
+            fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
+            fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+            fire(0.1, { spread: 120, startVelocity: 45, });
         }
 
         function showResult() {
