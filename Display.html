@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Event: Happy Owl (Safe Mode + JFF CORP's)</title>
+    <title>AI Event: Happy Owl</title>
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     
     <style>
@@ -101,7 +101,7 @@
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
         }
 
-        /* --- OWL LOGO (Top Left) --- */
+        /* --- OWL LOGO --- */
         .owl-logo-container {
             position: absolute; top: 25px; left: 30px; z-index: 200; 
             animation: logoFloat 4s ease-in-out infinite;
@@ -222,121 +222,236 @@
         @keyframes flipBookAnim { 0% { transform: rotateY(0deg); } 100% { transform: rotateY(-180deg); } }
 
         /* === MESSAGES STYLES === */
+        /* Basic Clean Card */
         .msg-box {
             width: 100%; display: flex; align-items: center;
-            background: #ffffff; border: 1px solid #e2e8f0; padding: 10px;
+            background: #ffffff; 
+            border: 1px solid #cbd5e1; 
+            padding: 10px;
             opacity: 0; transform: translateY(10px); 
             min-height: 85px; max-height: 120px; overflow: visible; box-sizing: border-box;
-            border-radius: 12px; transition: all 0.3s ease; box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-radius: 16px; 
+            transition: all 0.3s ease; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04); 
         }
         .img-wrapper { position: relative; margin-right: 15px; flex-shrink: 0; width: 60px; height: 60px; }
-        .msg-img { width: 100%; height: 100%; border-radius: 12px; object-fit: cover; background-color: #f1f5f9; border: 2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .msg-img { width: 100%; height: 100%; border-radius: 14px; object-fit: cover; background-color: #f1f5f9; border: 2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         .msg-content { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
         .msg-text { font-family: 'Kanit', sans-serif; font-weight: 500; color: #334155; margin-bottom: 4px; white-space: normal; word-wrap: break-word; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4; }
-        .msg-name { font-size: 0.85rem; color: #f59e0b; font-weight: 400; letter-spacing: 0.5px; }
+        .msg-name { font-size: 0.85rem; color: #64748b; font-weight: 400; letter-spacing: 0.5px; }
         .size-normal { font-size: 1rem; } .size-s { font-size: 0.9rem; } .size-xs { font-size: 0.8rem; }
         .msg-anim { animation: fadeInUp 0.8s forwards; }
         @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
         .d-1 { animation-delay: 0.5s; } .d-2 { animation-delay: 1.5s; } .d-3 { animation-delay: 2.5s; }
         .d-4 { animation-delay: 3.8s; } .d-5 { animation-delay: 4.8s; } .d-6 { animation-delay: 5.8s; }
 
-        /* === VIP STYLES (Limited) === */
+        /* === VIP STYLES (Limited Base) === */
         .msg-box.limited-card {
             background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
-            border: 2px solid #bfa35f; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            border: 1px solid #bfa35f; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
             position: relative; overflow: hidden; border-radius: 16px;
         }
+        /* Shimmer for Limited Card (Standard White Sweep) */
         .msg-box.limited-card::after {
             content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
             background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%);
-            transform: rotate(30deg); animation: shineMove 2.5s infinite; pointer-events: none;
+            transform: rotate(30deg); animation: shineMove 2.5s infinite; pointer-events: none; z-index: 1;
         }
         @keyframes shineMove { 0% { transform: translate(-100%, -100%) rotate(30deg); } 100% { transform: translate(50%, 50%) rotate(30deg); } }
-        .msg-box.limited-card .msg-text { color: #ffffff; text-shadow: 0 2px 4px rgba(0,0,0,0.8); font-weight: 600; }
-        .msg-box.limited-card .msg-name { color: #ffca28; font-weight: 700; text-transform: uppercase; }
-        .msg-img.limited-img { border-radius: 12px; border: 2px solid #FFD700; box-shadow: 0 0 15px rgba(255, 215, 0, 0.6); }
+        
+        .msg-box.limited-card .msg-text { color: #ffffff; text-shadow: 0 1px 2px rgba(0,0,0,0.8); font-weight: 600; position: relative; z-index: 2; }
+        .msg-box.limited-card .msg-name { color: #ffca28; font-weight: 700; text-transform: uppercase; position: relative; z-index: 2; }
+        .msg-img.limited-img { border-radius: 14px; border: 2px solid #FFD700; box-shadow: 0 0 10px rgba(255, 215, 0, 0.4); position: relative; z-index: 2; }
         .crown-badge { position: absolute; top: -14px; left: -8px; font-size: 24px; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.8)); transform: rotate(-15deg); animation: crownBounce 2s infinite ease-in-out; z-index: 10; }
         @keyframes crownBounce { 0%, 100% { transform: rotate(-15deg) translateY(0); } 50% { transform: rotate(-15deg) translateY(-3px); } }
 
         /* ========================================= */
-        /* === JFF CORP'S EXCLUSIVE NEON STYLE === */
+        /* === LEVEL SYSTEM STYLES (THEME FOCUSED) === */
         /* ========================================= */
-        .msg-box.jff-style {
-            background: rgba(15, 0, 25, 0.95); /* สีพื้นหลังม่วงดำเข้มๆ */
-            border: none;
-            position: relative;
-            overflow: visible; /* ให้แสง Glow ทะลุกรอบ */
-            box-shadow: 0 0 20px rgba(255, 0, 222, 0.3);
-            /* Clip-path สร้างมุมตัดแบบไซเบอร์ */
-            clip-path: polygon(
-                10px 0, 100% 0, 
-                100% calc(100% - 10px), calc(100% - 10px) 100%, 
-                0 100%, 0 10px
-            );
-            /* Padding เผื่อให้เส้นขอบ */
-            padding: 12px; 
-            margin-bottom: 12px; 
+        
+        .lv-badge {
+            position: absolute; top: 0; right: 0;
+            padding: 3px 12px; border-bottom-left-radius: 12px;
+            font-size: 0.65rem; font-weight: 800; color: #fff;
+            font-family: 'Chakra Petch', sans-serif; letter-spacing: 1px;
+            z-index: 5;
         }
 
-        /* สร้างเส้นขอบ Neon ด้วย Pseudo-element */
-        .msg-box.jff-style::before {
-            content: '';
-            position: absolute; inset: 0;
-            padding: 2px; /* ความหนาเส้นขอบ */
-            border-radius: 0; 
-            background: linear-gradient(90deg, #ff00de, #00ffff, #ff00de); /* ไล่สี ชมพู-ฟ้า */
+        /* LV 5 : Soft Jade */
+        .msg-box.lv-5 {
+            background: #f0fdf9 !important; border: 1px solid #99f6e4 !important; 
+            box-shadow: 0 2px 6px rgba(153, 246, 228, 0.3) !important;
+        }
+        .msg-box.lv-5 .msg-text { color: #115e59 !important; }
+        .msg-box.lv-5 .msg-name { color: #0f766e !important; font-weight: 600; }
+        .msg-box.lv-5 .msg-img { border-color: #5eead4 !important; }
+        .lv-badge.bg-lv5 { background-color: #5eead4; color: #134e4a; }
+
+        /* LV 10 : Soft Indigo */
+        .msg-box.lv-10 {
+            background: #f5f3ff !important; border: 1px solid #a78bfa !important;
+            box-shadow: 0 2px 6px rgba(167, 139, 250, 0.3) !important;
+        }
+        .msg-box.lv-10 .msg-text { color: #4c1d95 !important; }
+        .msg-box.lv-10 .msg-name { color: #5b21b6 !important; font-weight: 600; }
+        .msg-box.lv-10 .msg-img { border-color: #a78bfa !important; }
+        .lv-badge.bg-lv10 { background-color: #8b5cf6; color: white; }
+
+        /* LV 15+ (MAX) : REAL RAINBOW BORDER (FIXED) */
+        .msg-box.lv-max {
+            background: #ffffff !important; /* พื้นหลังขาว */
+            border: none !important; /* ลบเส้นขอบปกติ */
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important; /* เงาบางๆ พอ */
+            z-index: 0; 
+            border-radius: 16px;
+        }
+
+        /* สร้างเส้นขอบรุ้งโดยใช้เทคนิค Mask (เจาะรูตรงกลาง) */
+        .msg-box.lv-max::before {
+            content: "";
+            position: absolute;
+            inset: 0; /* เต็มพื้นที่ */
+            padding: 3px; /* ความหนาของเส้นขอบ */
+            border-radius: 16px; /* มุมโค้งต้องเท่ากับกล่อง */
+            
+            /* สีรุ้ง + อนิเมชั่น */
+            background: linear-gradient(124deg, #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, #1ddde8, #2b1de8, #dd00f3, #dd00f3);
+            background-size: 300% 300%;
+            animation: rainbowAnim 3s ease infinite;
+
+            /* เทคนิคเจาะรูตรงกลางเพื่อให้เห็นพื้นหลังขาวของกล่องแม่ */
             -webkit-mask: 
                 linear-gradient(#fff 0 0) content-box, 
                 linear-gradient(#fff 0 0);
             -webkit-mask-composite: xor;
             mask-composite: exclude;
+            
+            pointer-events: none;
+            z-index: 2; /* อยู่บนสุด */
+        }
+        
+        .msg-box.lv-max .msg-text { color: #1a1a1a !important; font-weight: 600 !important; }
+        .msg-box.lv-max .msg-name { 
+            background: linear-gradient(90deg, #ff0000, #002bff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800 !important; 
+        }
+        .msg-box.lv-max .msg-img { border: 2px solid #FFD700 !important; }
+
+        /* COMMON RAINBOW ANIMATION */
+        @keyframes rainbowAnim { 
+            0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%}
+        }
+        .lv-badge.bg-max { 
+            background: linear-gradient(124deg, #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, #1ddde8, #2b1de8, #dd00f3, #dd00f3);
+            background-size: 400% 400%; animation: rainbowAnim 3s ease infinite;
+            color: white; font-weight: 900;
+        }
+
+        /* ========================================= */
+        /* === JFF CORP'S EXCLUSIVE NEON STYLE (UPDATED) === */
+        /* ========================================= */
+        .msg-box.jff-style {
+            /* พื้นหลังสีมืด + ตาราง Grid */
+            background: rgba(10, 5, 20, 0.95) !important;
+            background-image:
+                linear-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px) !important;
+            background-size: 20px 20px !important;
+
+            /* 1. ลบเส้นขอบปกติออก เพื่อใช้ Animated Border แทน */
+            border: none !important;
+            border-radius: 12px !important;
+            
+            /* แสงฟุ้ง (Glow) */
+            box-shadow: 
+                0 0 10px rgba(0, 255, 255, 0.3),
+                inset 0 0 20px rgba(255, 0, 222, 0.1) !important;
+
+            position: relative; 
+            overflow: hidden; 
+            z-index: 1;
+        }
+
+        /* 2. สร้างเส้นขอบ Neon วิ่งได้ (Mask Technique) */
+        .msg-box.jff-style::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            padding: 2px; /* ความหนาเส้นขอบ */
+            border-radius: 12px;
+            
+            /* Gradient สี Neon (ฟ้า-ชมพู-ม่วง) */
+            background: linear-gradient(90deg, #00ffff, #ff00de, #5100ff, #00ffff);
+            background-size: 300% 300%;
+            animation: rainbowAnim 2s linear infinite; /* วิ่งเร็วกว่าปกติหน่อย */
+            
+            -webkit-mask: 
+                linear-gradient(#fff 0 0) content-box, 
+                linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            
             pointer-events: none;
             z-index: 2;
         }
 
-        /* ตกแต่งมุมกรอบ (Corner Accents) สีฟ้า Cyan */
+        /* 3. Shimmer Effect สีขาว (เหมือน Limited/VIP) */
         .msg-box.jff-style::after {
-            content: '';
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            /* มุมซ้ายบนและขวาล่าง */
-            background: 
-                linear-gradient(to right, #00ffff 2px, transparent 2px) 0 0,
-                linear-gradient(to bottom, #00ffff 2px, transparent 2px) 0 0,
-                linear-gradient(to left, #00ffff 2px, transparent 2px) 100% 100%,
-                linear-gradient(to top, #00ffff 2px, transparent 2px) 100% 100%;
-            background-size: 15px 15px; /* ขนาดของมุมฉาก */
-            background-repeat: no-repeat;
-            z-index: 3;
-            opacity: 0.8;
-            box-shadow: 0 0 10px #00ffff;
+            content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            /* ใช้สูตรเดียวกับ limited-card เป๊ะๆ */
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%);
+            transform: rotate(30deg); animation: shineMove 2.5s infinite; pointer-events: none;
+            z-index: 3; /* อยู่บนสุด */
+            mix-blend-mode: normal; /* เปลี่ยนกลับเป็น Normal เพื่อให้เห็นสีขาวชัดเจน */
         }
-        
-        /* แถบตกแต่งสีชมพู ด้านบนและล่าง (Bar Accents) */
+
+        /* ตกแต่งแถบสีชมพูคาด */
         .jff-decor-bar {
             position: absolute; left: 50%; transform: translateX(-50%);
-            width: 60%; height: 2px; background: #ff00de;
-            box-shadow: 0 0 8px #ff00de; z-index: 4;
+            width: 40%; height: 3px; background: #ff00de;
+            box-shadow: 0 0 10px #ff00de;
+            border-radius: 2px;
+            z-index: 2;
         }
-        .jff-decor-top { top: 4px; }
-        .jff-decor-bottom { bottom: 4px; }
+        .jff-decor-top { top: 0; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; } 
+        .jff-decor-bottom { bottom: 0; border-top-left-radius: 5px; border-top-right-radius: 5px; }
 
-        /* ข้อความใน JFF Frame */
+        /* ปรับสีตัวอักษร */
         .msg-box.jff-style .msg-text { 
-            color: #ffffff; 
-            text-shadow: 0 0 5px rgba(255, 0, 222, 0.8); 
-            font-family: 'Chakra Petch', sans-serif; /* เปลี่ยนฟอนต์ให้ดู Tech */
-            font-weight: 500;
+            color: #ffffff !important; 
+            text-shadow: 0 0 5px rgba(0, 255, 255, 0.6); 
+            font-family: 'Chakra Petch', sans-serif; font-weight: 500;
         }
         .msg-box.jff-style .msg-name { 
-            color: #00ffff; 
-            font-weight: 700; 
-            text-transform: uppercase; 
-            letter-spacing: 1px;
-            text-shadow: 0 0 5px #00ffff;
+            color: #00ffff !important; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+            text-shadow: 0 0 10px #00ffff !important;
+            background: none !important; -webkit-text-fill-color: #00ffff !important;
         }
         .msg-box.jff-style .msg-img {
-            border: 2px solid #00ffff;
-            box-shadow: 0 0 10px #ff00de;
+            border: 2px solid #00ffff !important; 
+            box-shadow: 0 0 10px #ff00de !important;
+            border-radius: 8px !important;
+        }
+        
+        /* แก้ไข Badge DEV (สีวิ่ง + ตัวหนังสือเลื่อม) */
+        .msg-box.jff-style .lv-badge.bg-dev {
+            top: 0; right: 0;
+            border-top-right-radius: 8px; /* ให้เข้ามุมกับกล่อง */
+            clip-path: none; /* เอา clip-path ออกเพื่อกันบัค */
+            padding: 4px 10px;
+
+            /* พื้นหลังสีวิ่ง Neon */
+            background: linear-gradient(90deg, #00ffff, #5100ff, #ff00de, #00ffff);
+            background-size: 300% 100%;
+            animation: rainbowAnim 3s linear infinite;
+            
+            /* ตัวหนังสือเลื่อม */
+            text-shadow: 0 1px 3px rgba(255, 255, 255, 0.9);
+            color: #ffffff;
+            
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
+            font-weight: 900; letter-spacing: 1px;
+            z-index: 10;
         }
 
         /* --- OWL MASCOT (Bottom Align) --- */
@@ -369,7 +484,7 @@
 
     <div class="header-container">
         <h1 class="main-title">AI EVENT : HAPPY OWL</h1>
-        <div class="main-subtitle">Interactive Experience</div>
+        <div class="main-subtitle">ส่งต่อความสุขที่ OWL</div>
         <div class="header-line"></div>
     </div>
 
@@ -421,7 +536,6 @@
             "สิทธิ์การใช้งาน AI (คละแบบ)", "ยืมหนังสือเพิ่ม 1 เท่า", "รางวัลพิเศษ"
         ];
         
-        // --- 🛑 ULTIMATE PROFANITY FILTER ---
         const badWords = [
             "fuck", "shit", "bitch", "asshole", "cunt", "dick", "pussy", "bastard", "motherfucker", 
             "whore", "slut", "idiot", "stupid", "dumbass", "wanker", "jerk", "sucker", "cock", 
@@ -434,20 +548,19 @@
             "dok", "he", "hee", "tad", "kum", "sathoon", "rayum", "junrai"
         ];
 
-        let allMessages = [];        
+        let allMessages = [];            
         let newMessagesQueue = [];
         let allLimitedWinners = []; 
         let totalUsers = 0; 
         
+        // Demo Messages
         const demoMessages = [
-            // ใส่ Demo ไว้ทดสอบ (ถ้าชื่อตรง มันจะขึ้นกรอบม่วงทันที)
-            { text: "TEST: JFF CORP's (Straight Quote)", name: "JFF CORP's", image: null, isLimited: false, reward: "-" },
-            { text: "TEST: JFF CORP’s (Smart Quote)", name: "JFF CORP’s", image: null, isLimited: false, reward: "-" },
-            
-            { text: "ขอให้โลกนี้ใจดีกับทุกคน", name: "User 1", image: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png", isLimited: true, reward: "จองห้อง Mini Theatre (3 ชม.)" },
-            { text: "สวัสดีวันจันทร์", name: "User 2", image: null, isLimited: false },
-            { text: "อยากได้รางวัลใหญ่จังเลยยย", name: "User 3", image: "https://cdn-icons-png.flaticon.com/512/3135/3135768.png", isLimited: false },
-            { text: "Happy New Year 2026!", name: "User 4", image: null, isLimited: false }
+            { text: "JFF CORP's (System)", name: "JFF CORP's", image: null, isLimited: false, reward: "-", level: 0 },
+            { text: "สุดยอดมากครับ (LV.MAX)", name: "Super Fan", image: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png", isLimited: false, level: 15 },
+            { text: "ชอบงานนี้มาก (Level 10)", name: "Pro User", image: null, isLimited: false, level: 10 },
+            { text: "สวัสดีครับ (Level 5)", name: "Newbie", image: null, isLimited: false, level: 5 },
+            { text: "สวัสดีวันจันทร์", name: "User A", image: null, isLimited: false, level: 0 },
+            { text: "Happy New Year!", name: "User B", image: "https://cdn-icons-png.flaticon.com/512/3135/3135768.png", isLimited: true, reward: "รางวัลพิเศษ", level: 0 }
         ];
 
         const staticLeft = document.getElementById('static-left');
@@ -457,6 +570,8 @@
         const flipBackContent = document.getElementById('flip-back-content');
         const scrollingContent = document.getElementById('scrolling-content');
         const totalCountEl = document.getElementById('total-count');
+        
+        let userLevelMap = {};
 
         function containsBadWords(text) {
             if (!text) return false;
@@ -464,11 +579,24 @@
             return badWords.some(word => lowerText.includes(word));
         }
 
-        function formatMessage(data) {
+        async function fetchUserCount(name) {
+            if (!name) return 0;
+            const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+            const { count, error } = await supabase
+                .from('HappyOwl_messages')
+                .select('*', { count: 'exact', head: true })
+                .eq('name', name);
+            
+            if (error) { console.error(error); return 0; }
+            return count;
+        }
+
+        function formatMessage(data, realCount = 0) {
             const isLimited = limitedRewards.includes(data.reward);
             return { 
                 text: data.message, name: data.name, image: data.image_url, 
-                id: data.id || Date.now(), isLimited: isLimited, reward: data.reward
+                id: data.id || Date.now(), isLimited: isLimited, reward: data.reward,
+                level: realCount 
             };
         }
 
@@ -514,7 +642,7 @@
         }
 
         // ==========================================
-        // 🔥 จุดแก้ไข Logic: รองรับขีดทั้ง 2 แบบ ' และ ’ 🔥
+        // 🔥 UPDATE LOGIC: LEVEL SYSTEM & STYLES 🔥
         // ==========================================
         function generateHTML(msg, seqIndex = 0, isStatic = false) {
             if (!msg || !msg.text) return `<div class="msg-box" style="opacity:0"></div>`;
@@ -529,15 +657,34 @@
             let imgClass = "msg-img";
             let crownHtml = "";
             let extraDecor = "";
+            let lvBadgeHtml = "";
 
-            // 1. แปลงชื่อให้เป็นมาตรฐาน (ตัดช่องว่าง, แปลง ’ เป็น ')
-            // เพื่อให้ JFF CORP's และ JFF CORP’s (พิมพ์จากมือถือ) ผ่านทั้งคู่
             const cleanName = msg.name ? msg.name.trim().replace(/’/g, "'") : "";
+            const currentLevel = msg.level || 0;
 
+            // 1. JFF CORP's (Highest Priority)
             if (cleanName === "JFF CORP's") {
                 boxClass += " jff-style"; 
                 extraDecor = `<div class="jff-decor-bar jff-decor-top"></div><div class="jff-decor-bar jff-decor-bottom"></div>`;
+                // Add DEV Badge for JFF
+                lvBadgeHtml = `<div class="lv-badge bg-dev">DEV</div>`;
             } 
+            // 2. Level System
+            else if (currentLevel >= 5) {
+                boxClass += " limited-card"; 
+                // LV 15 => MAX (Rainbow Border White Box)
+                if (currentLevel >= 15) {
+                    boxClass += " lv-max";
+                    lvBadgeHtml = `<div class="lv-badge bg-max">LV.MAX</div>`;
+                } else if (currentLevel >= 10) {
+                    boxClass += " lv-10";
+                    lvBadgeHtml = `<div class="lv-badge bg-lv10">LV.10</div>`;
+                } else { // 5-9
+                    boxClass += " lv-5";
+                    lvBadgeHtml = `<div class="lv-badge bg-lv5">LV.5</div>`;
+                }
+            }
+            // 3. Limited Winner
             else if (msg.isLimited) {
                 boxClass += " limited-card";
                 imgClass += " limited-img";
@@ -547,6 +694,7 @@
             return `
                 <div class="${boxClass} ${animClass} ${delayClass}" style="${opacityStyle}">
                     ${extraDecor}
+                    ${lvBadgeHtml}
                     <div class="img-wrapper">
                         ${crownHtml}
                         <img src="${imgUrl}" class="${imgClass}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/847/847969.png'">
@@ -623,9 +771,18 @@
 
                 if (!error && data && data.length > 0) {
                     let realMessages = [];
+                    const uniqueNames = [...new Set(data.map(item => item.name))];
+                    
+                    for (const name of uniqueNames) {
+                        if (name && !userLevelMap[name]) {
+                             userLevelMap[name] = await fetchUserCount(name);
+                        }
+                    }
+
                     data.forEach(item => {
                         if (!containsBadWords(item.message)) {
-                            realMessages.push(formatMessage(item));
+                            const count = userLevelMap[item.name] || 0;
+                            realMessages.push(formatMessage(item, count));
                         }
                     });
                     
@@ -639,13 +796,16 @@
                 initBook(); 
                 
                 supabase.channel('realtime-book')
-                .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'HappyOwl_messages' }, (payload) => {
+                .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'HappyOwl_messages' }, async (payload) => {
                     totalUsers++;
                     totalCountEl.innerText = totalUsers.toLocaleString();
 
                     const newItem = payload.new;
                     if (!containsBadWords(newItem.message)) {
-                        const formatted = formatMessage(newItem);
+                        const freshCount = await fetchUserCount(newItem.name);
+                        userLevelMap[newItem.name] = freshCount;
+
+                        const formatted = formatMessage(newItem, freshCount);
                         newMessagesQueue.push(formatted);
                         allMessages.push(formatted);
 
