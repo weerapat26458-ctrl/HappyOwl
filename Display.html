@@ -2,856 +2,263 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Event: Happy Owl</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Send Message - Happy Owl</title>
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,600;0,700;1,700&family=Kanit:wght@300;400;600;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap');
 
-        body { 
-            margin: 0; overflow: hidden; 
-            background-color: #0b1026; 
-            background-image: 
-                radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.4) 100%),
-                url('https://media.discordapp.net/attachments/1460827312080556032/1460892038470959125/12.png?ex=6968913c&is=69673fbc&hm=8c90589d6c7c7440917efea51822acd395d4f345cf7b5291cf196b15e4d24fc4&=&format=webp&quality=lossless&width=961&height=680');
-            background-size: cover; 
-            background-position: center; 
-            background-repeat: no-repeat;
-            
-            font-family: 'Kanit', sans-serif; color: white; height: 100vh; 
-            position: relative; perspective: 2500px;
-        }
-
-        /* === ละอองแสงวิเศษ === */
-        .bg-particles {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            overflow: hidden; z-index: 1; pointer-events: none;
-        }
-        .bg-particles span {
-            position: absolute; display: block;
-            width: 8px; height: 8px; background: rgba(255, 255, 255, 0.6);
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
-            border-radius: 50%; animation: moveParticles 15s linear infinite;
-            bottom: -10px;
-        }
-        .bg-particles span:nth-child(1) { left: 10%; width: 10px; height: 10px; animation-duration: 12s; }
-        .bg-particles span:nth-child(2) { left: 20%; width: 6px; height: 6px; animation-duration: 18s; animation-delay: 2s; }
-        .bg-particles span:nth-child(3) { left: 35%; width: 12px; height: 12px; animation-duration: 25s; animation-delay: 4s; }
-        .bg-particles span:nth-child(4) { left: 50%; width: 8px; height: 8px; animation-duration: 15s; animation-delay: 1s; }
-        .bg-particles span:nth-child(5) { left: 65%; width: 5px; height: 5px; animation-duration: 20s; animation-delay: 3s; }
-        .bg-particles span:nth-child(6) { left: 80%; width: 10px; height: 10px; animation-duration: 22s; animation-delay: 5s; }
-        @keyframes moveParticles {
-            0% { transform: translateY(0) scale(1); opacity: 0; }
-            10% { opacity: 1; }
-            100% { transform: translateY(-100vh) scale(0.5); opacity: 0; }
+        body {
+            background-color: #0b1026;
+            color: white;
+            font-family: 'Kanit', sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: radial-gradient(circle at 50% 50%, #1a2c55 0%, #0b1026 100%);
         }
 
-        /* --- HEADER --- */
-        .header-container {
-            position: absolute; top: 60px; left: 0; width: 100%;
-            text-align: center; z-index: 60; pointer-events: none;
-        }
-        .main-title {
-            font-family: 'Chakra Petch', sans-serif; 
-            font-size: 5rem; font-weight: 700; font-style: italic; 
-            margin: 0; line-height: 1; text-transform: uppercase; letter-spacing: 2px;
-            background: linear-gradient(180deg, #ffffff 30%, #4facfe 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(79, 172, 254, 0.6), 0 0 40px rgba(0, 242, 254, 0.4);
-            filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.5));
-            position: relative; display: inline-block;
-        }
-        .main-subtitle {
-            font-family: 'Kanit', sans-serif; font-size: 1.2rem; color: #e0f7fa; 
-            letter-spacing: 8px; text-transform: uppercase; font-weight: 400; margin-top: 5px;
-            text-shadow: 0 0 10px rgba(0, 255, 255, 0.8); opacity: 1;
-        }
-        .header-line {
-            width: 150px; height: 4px; 
-            background: linear-gradient(90deg, transparent, #ffffff, #00f2fe, transparent);
-            margin: 10px auto 0; border-radius: 10px; box-shadow: 0 0 20px rgba(0, 242, 254, 0.8);
-        }
-
-        /* --- TOTAL COUNTER --- */
-        .total-panel {
-            position: absolute; top: 25px; right: 30px; z-index: 70; 
-            animation: fadeInRight 1s ease-out;
-        }
-        @keyframes fadeInRight { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
-        
-        .total-box {
-            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.5); border-bottom: 3px solid #00f2fe;
-            border-radius: 20px; padding: 8px 25px; 
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2), 0 0 15px rgba(0, 242, 254, 0.2);
-            display: flex; flex-direction: column; align-items: flex-end;
-            transition: transform 0.2s;
-        }
-        .total-box:hover { transform: scale(1.05); }
-        .total-label {
-            font-family: 'Kanit', sans-serif; font-size: 0.7rem; color: #bae6fd;
-            letter-spacing: 1px; font-weight: 600; text-transform: uppercase;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.5); margin-bottom: -2px;
-        }
-        .total-number {
-            font-family: 'Chakra Petch', sans-serif; font-size: 2.2rem; font-weight: 800; line-height: 1;
-            background: linear-gradient(to bottom, #ffffff, #00f2fe);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
-        }
-
-        /* --- OWL LOGO --- */
-        .owl-logo-container {
-            position: absolute; top: 25px; left: 30px; z-index: 200; 
-            animation: logoFloat 4s ease-in-out infinite;
-        }
-        .owl-logo-img {
-            width: 200px; height: auto; display: block;
-            filter: drop-shadow(0 5px 15px rgba(0, 150, 255, 0.4)); transition: all 0.3s ease;
-        }
-        @keyframes logoFloat {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
-        }
-
-        /* --- LEFT PANEL: QR CODE --- */
-        .qr-panel {
-            position: absolute; top: 60%; left: 5%; 
-            transform: translateY(-50%); width: 260px;
-            background: rgba(10, 20, 40, 0.5); backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2); 
-            border-top: 1px solid #ffd700; border-bottom: 1px solid #00f2fe;
-            border-radius: 20px; padding: 20px; text-align: center; z-index: 55;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            animation: floatPanelLeft 6s ease-in-out infinite;
-        }
-        @keyframes floatPanelLeft {
-            0%, 100% { transform: translateY(-50%) translateY(0px); }
-            50% { transform: translateY(-50%) translateY(-10px); }
-        }
-        .qr-title { font-size: 1.4rem; font-weight: 800; color: #fff; margin-bottom: 5px; text-shadow: 0 0 10px rgba(0,150,255,0.5); }
-        .qr-subtitle { font-size: 0.9rem; color: #cbd5e1; margin-bottom: 15px; font-weight: 300; }
-        .qr-image-box { background: white; padding: 8px; border-radius: 10px; display: inline-block; box-shadow: 0 0 15px rgba(255,215,0,0.3); }
-        .qr-image-box img { width: 160px; height: 160px; display: block; }
-
-        /* --- RIGHT PANEL: LIMITED WINNERS --- */
-        .limited-panel {
-            position: absolute; top: 55%; right: 5%; 
-            transform: translateY(-50%); width: 280px; height: 450px; 
-            background: rgba(10, 20, 40, 0.6); backdrop-filter: blur(10px);
+        .container {
+            width: 100%;
+            max-width: 400px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            border-top: 3px solid #ffd700; border-bottom: 1px solid #00f2fe;
-            border-radius: 20px; padding: 20px; z-index: 55;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            display: flex; flex-direction: column;
-            animation: floatPanelRight 7s ease-in-out infinite;
-        }
-        @keyframes floatPanelRight {
-            0%, 100% { transform: translateY(-50%) translateY(0px); }
-            50% { transform: translateY(-50%) translateY(-12px); }
-        }
-        .limited-title {
-            font-size: 1.3rem; font-weight: 800; color: #ffca28; text-align: center; margin-bottom: 15px;
-            text-shadow: 0 2px 10px rgba(255,215,0,0.4); letter-spacing: 1px;
-            border-bottom: 1px solid rgba(255, 215, 0, 0.3); padding-bottom: 10px;
-            flex-shrink: 0; z-index: 2; background: inherit;
-        }
-        .limited-window {
-            flex: 1; overflow: hidden; position: relative;
-            mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
-        }
-        .limited-content { position: absolute; width: 100%; }
-        .scrolling-up { animation: scrollVertical linear infinite; }
-        @keyframes scrollVertical { 0% { transform: translateY(0); } 100% { transform: translateY(-50%); } }
-
-        .winner-item {
-            display: flex; align-items: center;
-            background: linear-gradient(to right, rgba(255, 215, 0, 0.1), transparent);
-            border-left: 3px solid #FFD700;
-            padding: 10px; margin-bottom: 10px; border-radius: 6px;
-        }
-        .winner-img { width: 35px; height: 35px; border-radius: 50%; border: 1px solid #FFD700; margin-right: 10px; object-fit: cover; }
-        .winner-info { flex: 1; min-width: 0; }
-        .winner-name { font-size: 0.85rem; font-weight: 700; color: #fff; margin-bottom: 2px; }
-        .winner-reward { font-size: 0.75rem; color: #ffca28; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-        /* --- BOOK STAGE --- */
-        .book-stage {
-            position: absolute; top: 52%; left: 50%; 
-            transform: translate(-50%, -50%) rotateX(20deg); 
-            width: 850px; height: 550px; z-index: 50; 
-        }
-        .book { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; }
-
-        .book-cover {
-            position: absolute; top: -20px; left: -20px; right: -20px; bottom: -20px;
-            background-color: #6ec5b8; border-radius: 15px;
-            transform: translateZ(-5px); border-bottom: 10px solid #4da699; 
-            box-shadow: 0 50px 100px rgba(0,0,0,0.6); z-index: 0; 
-        }
-        .book-spine-bar {
-            position: absolute; left: 50%; top: -20px; bottom: -25px; width: 60px;
-            transform: translateX(-50%); background: #4da699; z-index: 5; border-radius: 5px;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            text-align: center;
         }
 
-        .page-sheet {
-            position: absolute; top: 0; width: 50%; height: 100%;
-            background-color: #fffbf0; overflow: hidden; 
-            padding: 25px 30px; box-sizing: border-box; 
-            display: flex; flex-direction: column; justify-content: space-around; align-items: center;
-            transform-style: preserve-3d; border: 1px solid #eaddcf;
-        }
-        #static-left { left: 0; border-radius: 10px 0 0 10px; z-index: 10; box-shadow: inset -20px 0 30px rgba(0,0,0,0.05), -1px 0 0 #eaddcf; }
-        #static-right { right: 0; border-radius: 0 10px 10px 0; z-index: 9; box-shadow: inset 20px 0 30px rgba(0,0,0,0.05), 1px 0 0 #eaddcf; }
-
-        .flipping-wrapper {
-            position: absolute; top: 0; right: 0; width: 50%; height: 100%;
-            transform-origin: left center; transform-style: preserve-3d;
-            z-index: 100; display: none; 
-        }
-        .flip-front, .flip-back {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            backface-visibility: hidden; background-color: #fffbf0; 
-            border: 1px solid #eaddcf; box-sizing: border-box;
-            padding: 25px 30px; display: flex; flex-direction: column; justify-content: space-around; align-items: center;
-        }
-        .flip-front { border-radius: 0 10px 10px 0; box-shadow: inset 15px 0 30px rgba(0,0,0,0.05); }
-        .flip-back { transform: rotateY(180deg); border-radius: 10px 0 0 10px; box-shadow: inset -15px 0 30px rgba(0,0,0,0.05); }
-        .do-flip { display: block; animation: flipBookAnim 1.8s cubic-bezier(0.645, 0.045, 0.355, 1) forwards; }
-        @keyframes flipBookAnim { 0% { transform: rotateY(0deg); } 100% { transform: rotateY(-180deg); } }
-
-        /* === MESSAGES STYLES === */
-        /* Basic Clean Card */
-        .msg-box {
-            width: 100%; display: flex; align-items: center;
-            background: #ffffff; 
-            border: 1px solid #cbd5e1; 
-            padding: 10px;
-            opacity: 0; transform: translateY(10px); 
-            min-height: 85px; max-height: 120px; overflow: visible; box-sizing: border-box;
-            border-radius: 16px; 
-            transition: all 0.3s ease; 
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04); 
-        }
-        .img-wrapper { position: relative; margin-right: 15px; flex-shrink: 0; width: 60px; height: 60px; }
-        .msg-img { width: 100%; height: 100%; border-radius: 14px; object-fit: cover; background-color: #f1f5f9; border: 2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .msg-content { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
-        .msg-text { font-family: 'Kanit', sans-serif; font-weight: 500; color: #334155; margin-bottom: 4px; white-space: normal; word-wrap: break-word; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4; }
-        .msg-name { font-size: 0.85rem; color: #64748b; font-weight: 400; letter-spacing: 0.5px; }
-        .size-normal { font-size: 1rem; } .size-s { font-size: 0.9rem; } .size-xs { font-size: 0.8rem; }
-        .msg-anim { animation: fadeInUp 0.8s forwards; }
-        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
-        .d-1 { animation-delay: 0.5s; } .d-2 { animation-delay: 1.5s; } .d-3 { animation-delay: 2.5s; }
-        .d-4 { animation-delay: 3.8s; } .d-5 { animation-delay: 4.8s; } .d-6 { animation-delay: 5.8s; }
-
-        /* === VIP STYLES (Limited Base) === */
-        .msg-box.limited-card {
-            background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
-            border: 1px solid #bfa35f; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
-            position: relative; overflow: hidden; border-radius: 16px;
-        }
-        /* Shimmer for Limited Card (Standard White Sweep) */
-        .msg-box.limited-card::after {
-            content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%);
-            transform: rotate(30deg); animation: shineMove 2.5s infinite; pointer-events: none; z-index: 1;
-        }
-        @keyframes shineMove { 0% { transform: translate(-100%, -100%) rotate(30deg); } 100% { transform: translate(50%, 50%) rotate(30deg); } }
-        
-        .msg-box.limited-card .msg-text { color: #ffffff; text-shadow: 0 1px 2px rgba(0,0,0,0.8); font-weight: 600; position: relative; z-index: 2; }
-        .msg-box.limited-card .msg-name { color: #ffca28; font-weight: 700; text-transform: uppercase; position: relative; z-index: 2; }
-        .msg-img.limited-img { border-radius: 14px; border: 2px solid #FFD700; box-shadow: 0 0 10px rgba(255, 215, 0, 0.4); position: relative; z-index: 2; }
-        .crown-badge { position: absolute; top: -14px; left: -8px; font-size: 24px; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.8)); transform: rotate(-15deg); animation: crownBounce 2s infinite ease-in-out; z-index: 10; }
-        @keyframes crownBounce { 0%, 100% { transform: rotate(-15deg) translateY(0); } 50% { transform: rotate(-15deg) translateY(-3px); } }
-
-        /* ========================================= */
-        /* === LEVEL SYSTEM STYLES (THEME FOCUSED) === */
-        /* ========================================= */
-        
-        .lv-badge {
-            position: absolute; top: 0; right: 0;
-            padding: 3px 12px; border-bottom-left-radius: 12px;
-            font-size: 0.65rem; font-weight: 800; color: #fff;
-            font-family: 'Chakra Petch', sans-serif; letter-spacing: 1px;
-            z-index: 5;
+        h1 {
+            margin-top: 0;
+            color: #00f2fe;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(0, 242, 254, 0.5);
         }
 
-        /* LV 5 : Soft Jade */
-        .msg-box.lv-5 {
-            background: #f0fdf9 !important; border: 1px solid #99f6e4 !important; 
-            box-shadow: 0 2px 6px rgba(153, 246, 228, 0.3) !important;
-        }
-        .msg-box.lv-5 .msg-text { color: #115e59 !important; }
-        .msg-box.lv-5 .msg-name { color: #0f766e !important; font-weight: 600; }
-        .msg-box.lv-5 .msg-img { border-color: #5eead4 !important; }
-        .lv-badge.bg-lv5 { background-color: #5eead4; color: #134e4a; }
-
-        /* LV 10 : Soft Indigo */
-        .msg-box.lv-10 {
-            background: #f5f3ff !important; border: 1px solid #a78bfa !important;
-            box-shadow: 0 2px 6px rgba(167, 139, 250, 0.3) !important;
-        }
-        .msg-box.lv-10 .msg-text { color: #4c1d95 !important; }
-        .msg-box.lv-10 .msg-name { color: #5b21b6 !important; font-weight: 600; }
-        .msg-box.lv-10 .msg-img { border-color: #a78bfa !important; }
-        .lv-badge.bg-lv10 { background-color: #8b5cf6; color: white; }
-
-        /* LV 15+ (MAX) : REAL RAINBOW BORDER (FIXED) */
-        .msg-box.lv-max {
-            background: #ffffff !important; /* พื้นหลังขาว */
-            border: none !important; /* ลบเส้นขอบปกติ */
-            position: relative;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important; /* เงาบางๆ พอ */
-            z-index: 0; 
-            border-radius: 16px;
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
         }
 
-        /* สร้างเส้นขอบรุ้งโดยใช้เทคนิค Mask (เจาะรูตรงกลาง) */
-        .msg-box.lv-max::before {
-            content: "";
-            position: absolute;
-            inset: 0; /* เต็มพื้นที่ */
-            padding: 3px; /* ความหนาของเส้นขอบ */
-            border-radius: 16px; /* มุมโค้งต้องเท่ากับกล่อง */
-            
-            /* สีรุ้ง + อนิเมชั่น */
-            background: linear-gradient(124deg, #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, #1ddde8, #2b1de8, #dd00f3, #dd00f3);
-            background-size: 300% 300%;
-            animation: rainbowAnim 3s ease infinite;
-
-            /* เทคนิคเจาะรูตรงกลางเพื่อให้เห็นพื้นหลังขาวของกล่องแม่ */
-            -webkit-mask: 
-                linear-gradient(#fff 0 0) content-box, 
-                linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            
-            pointer-events: none;
-            z-index: 2; /* อยู่บนสุด */
-        }
-        
-        .msg-box.lv-max .msg-text { color: #1a1a1a !important; font-weight: 600 !important; }
-        .msg-box.lv-max .msg-name { 
-            background: linear-gradient(90deg, #ff0000, #002bff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800 !important; 
-        }
-        .msg-box.lv-max .msg-img { border: 2px solid #FFD700 !important; }
-
-        /* COMMON RAINBOW ANIMATION */
-        @keyframes rainbowAnim { 
-            0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%}
-        }
-        .lv-badge.bg-max { 
-            background: linear-gradient(124deg, #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, #1ddde8, #2b1de8, #dd00f3, #dd00f3);
-            background-size: 400% 400%; animation: rainbowAnim 3s ease infinite;
-            color: white; font-weight: 900;
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ccc;
+            font-size: 0.9rem;
         }
 
-        /* ========================================= */
-        /* === JFF CORP'S EXCLUSIVE NEON STYLE (UPDATED) === */
-        /* ========================================= */
-        .msg-box.jff-style {
-            /* พื้นหลังสีมืด + ตาราง Grid */
-            background: rgba(10, 5, 20, 0.95) !important;
-            background-image:
-                linear-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px) !important;
-            background-size: 20px 20px !important;
-
-            /* 1. ลบเส้นขอบปกติออก เพื่อใช้ Animated Border แทน */
-            border: none !important;
-            border-radius: 12px !important;
-            
-            /* แสงฟุ้ง (Glow) */
-            box-shadow: 
-                0 0 10px rgba(0, 255, 255, 0.3),
-                inset 0 0 20px rgba(255, 0, 222, 0.1) !important;
-
-            position: relative; 
-            overflow: hidden; 
-            z-index: 1;
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #444;
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            font-family: 'Kanit', sans-serif;
+            box-sizing: border-box;
+            transition: 0.3s;
         }
 
-        /* 2. สร้างเส้นขอบ Neon วิ่งได้ (Mask Technique) */
-        .msg-box.jff-style::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            padding: 2px; /* ความหนาเส้นขอบ */
-            border-radius: 12px;
-            
-            /* Gradient สี Neon (ฟ้า-ชมพู-ม่วง) */
-            background: linear-gradient(90deg, #00ffff, #ff00de, #5100ff, #00ffff);
-            background-size: 300% 300%;
-            animation: rainbowAnim 2s linear infinite; /* วิ่งเร็วกว่าปกติหน่อย */
-            
-            -webkit-mask: 
-                linear-gradient(#fff 0 0) content-box, 
-                linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            
-            pointer-events: none;
-            z-index: 2;
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #00f2fe;
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
         }
 
-        /* 3. Shimmer Effect สีขาว (เหมือน Limited/VIP) */
-        .msg-box.jff-style::after {
-            content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-            /* ใช้สูตรเดียวกับ limited-card เป๊ะๆ */
-            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%);
-            transform: rotate(30deg); animation: shineMove 2.5s infinite; pointer-events: none;
-            z-index: 3; /* อยู่บนสุด */
-            mix-blend-mode: normal; /* เปลี่ยนกลับเป็น Normal เพื่อให้เห็นสีขาวชัดเจน */
+        button {
+            width: 100%;
+            padding: 15px;
+            border-radius: 50px;
+            border: none;
+            background: linear-gradient(90deg, #00c6ff, #0072ff);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 5px 15px rgba(0, 114, 255, 0.4);
         }
 
-        /* ตกแต่งแถบสีชมพูคาด */
-        .jff-decor-bar {
-            position: absolute; left: 50%; transform: translateX(-50%);
-            width: 40%; height: 3px; background: #ff00de;
-            box-shadow: 0 0 10px #ff00de;
-            border-radius: 2px;
-            z-index: 2;
-        }
-        .jff-decor-top { top: 0; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; } 
-        .jff-decor-bottom { bottom: 0; border-top-left-radius: 5px; border-top-right-radius: 5px; }
-
-        /* ปรับสีตัวอักษร */
-        .msg-box.jff-style .msg-text { 
-            color: #ffffff !important; 
-            text-shadow: 0 0 5px rgba(0, 255, 255, 0.6); 
-            font-family: 'Chakra Petch', sans-serif; font-weight: 500;
-        }
-        .msg-box.jff-style .msg-name { 
-            color: #00ffff !important; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
-            text-shadow: 0 0 10px #00ffff !important;
-            background: none !important; -webkit-text-fill-color: #00ffff !important;
-        }
-        .msg-box.jff-style .msg-img {
-            border: 2px solid #00ffff !important; 
-            box-shadow: 0 0 10px #ff00de !important;
-            border-radius: 8px !important;
-        }
-        
-        /* แก้ไข Badge DEV (สีวิ่ง + ตัวหนังสือเลื่อม) */
-        .msg-box.jff-style .lv-badge.bg-dev {
-            top: 0; right: 0;
-            border-top-right-radius: 8px; /* ให้เข้ามุมกับกล่อง */
-            clip-path: none; /* เอา clip-path ออกเพื่อกันบัค */
-            padding: 4px 10px;
-
-            /* พื้นหลังสีวิ่ง Neon */
-            background: linear-gradient(90deg, #00ffff, #5100ff, #ff00de, #00ffff);
-            background-size: 300% 100%;
-            animation: rainbowAnim 3s linear infinite;
-            
-            /* ตัวหนังสือเลื่อม */
-            text-shadow: 0 1px 3px rgba(255, 255, 255, 0.9);
-            color: #ffffff;
-            
-            box-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
-            font-weight: 900; letter-spacing: 1px;
-            z-index: 10;
+        button:active {
+            transform: scale(0.95);
         }
 
-        /* --- OWL MASCOT (Bottom Align) --- */
-        .owl-container { 
-            position: fixed; bottom: -30px; left: 50%; transform: translateX(-50%); 
-            width: 450px; z-index: 9999; pointer-events: none; line-height: 0; 
+        button:disabled {
+            background: #555;
+            cursor: not-allowed;
+            box-shadow: none;
         }
-        .owl-container img { 
-            width: 100%; display: block; 
-            animation: owlBreathe 4s ease-in-out infinite; 
-            transform-origin: bottom center; 
+
+        /* Modal ผลรางวัล */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
         }
-        @keyframes owlBreathe { 
-            0%, 100% { transform: translateY(0) scale(1); } 
-            50% { transform: translateY(5px) scale(1.02); } 
+        .modal-content {
+            background: #1a1a1a;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 80%;
+            border: 2px solid #ffd700;
+            animation: popIn 0.3s ease;
         }
+        @keyframes popIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .reward-title { font-size: 1.5rem; color: #ffd700; margin-bottom: 10px; font-weight: bold; }
+        .reward-item { font-size: 1.2rem; margin-bottom: 20px; color: white; }
+        .close-btn { background: #444; margin-top: 10px; }
+
     </style>
 </head>
 <body>
 
-    <div class="bg-particles">
-        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-    </div>
+    <div class="container">
+        <h1>Happy Owl Event</h1>
+        <p style="color: #aaa; margin-bottom: 30px;">พิมพ์ข้อความเพื่อขึ้นจอและลุ้นรางวัล</p>
 
-    <div class="owl-logo-container">
-        <img src="blue-OWL-logo.png" 
-             onerror="this.src='https://cdn-icons-png.flaticon.com/512/477/477163.png'" 
-             alt="OWL Logo" class="owl-logo-img">
-    </div>
-
-    <div class="header-container">
-        <h1 class="main-title">AI EVENT : HAPPY OWL</h1>
-        <div class="main-subtitle">ส่งต่อความสุขที่ OWL</div>
-        <div class="header-line"></div>
-    </div>
-
-    <div class="total-panel">
-        <div class="total-box">
-            <div class="total-label">JOINED USERS</div>
-            <div class="total-number" id="total-count">...</div>
+        <div class="input-group">
+            <label>ชื่อของคุณ (Name)</label>
+            <input type="text" id="nameInput" placeholder="กรอกชื่อเล่น..." maxlength="20">
         </div>
-    </div>
 
-    <div class="qr-panel">
-        <div class="qr-title">SCAN TO JOIN</div>
-        <div class="qr-subtitle">สแกนเพื่อส่งข้อความขึ้นจอ</div>
-        <div class="qr-image-box">
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://weerapat26458-ctrl.github.io/HappyOwl/Usersdisplay.html" alt="Scan QR">
+        <div class="input-group">
+            <label>ข้อความ (Message)</label>
+            <textarea id="msgInput" rows="3" placeholder="พิมพ์ข้อความอวยพร..." maxlength="100"></textarea>
         </div>
+
+        <button id="sendBtn" onclick="submitMessage()">🚀 ส่งข้อความ & ลุ้นรางวัล</button>
     </div>
 
-    <div class="limited-panel">
-        <div class="limited-title">🏆 Special Rewards</div>
-        <div class="limited-window">
-            <div class="limited-content" id="scrolling-content"></div>
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <div class="reward-title">🎉 ยินดีด้วย!</div>
+            <div id="rewardText" class="reward-item">...</div>
+            <button class="close-btn" onclick="closeModal()">ตกลง</button>
         </div>
-    </div>
-
-    <div class="book-stage">
-        <div class="book">
-            <div class="book-cover"></div>
-            <div class="book-spine-bar"></div>
-            <div class="page-sheet" id="static-left"></div>
-            <div class="page-sheet" id="static-right"></div>
-            <div class="flipping-wrapper" id="flipper">
-                <div class="flip-front" id="flip-front-content"></div>
-                <div class="flip-back" id="flip-back-content"></div>
-            </div>
-        </div>
-    </div>
-
-    <div class="owl-container">
-        <img src="https://media.discordapp.net/attachments/1460827312080556032/1460899620686135296/ChatGPT_Image_14_.._2569_14_31_23.png?ex=6968984b&is=696746cb&hm=24aef68b14cb0fc469388f9605e2e47da933717b6026857e849417c22bd4d97e&=&format=webp&quality=lossless&width=1061&height=680" alt="Happy Owl">
     </div>
 
     <script>
+        // --- การตั้งค่า Supabase (ใช้ Key เดียวกับ Display) ---
         const supabaseUrl = 'https://kgyhqwgpeyfszowdrhbd.supabase.co';
         const supabaseKey = 'sb_publishable_DgFCEd6iMOogHTNtr4ht-Q_4SAn8FBN';
-        
-        const limitedRewards = [
-            "จองห้อง Sharing Room (3 ชม.)", "จองห้อง Mini Theatre (3 ชม.)", 
-            "สิทธิ์การใช้งาน AI (คละแบบ)", "ยืมหนังสือเพิ่ม 1 เท่า", "รางวัลพิเศษ"
-        ];
-        
-        const badWords = [
-            "fuck", "shit", "bitch", "asshole", "cunt", "dick", "pussy", "bastard", "motherfucker", 
-            "whore", "slut", "idiot", "stupid", "dumbass", "wanker", "jerk", "sucker", "cock", 
-            "kuy", "fck", "sh1t", "b1tch",
-            "ควย", "เหี้ย", "สัส", "สัตว์", "เย็ด", "เยด", "แม่ง", "มึง", "กู", "มรึง", "กุ",
-            "เลว", "โง่", "ชั่ว", "นรก", "ระยำ", "จัญไร", "เสนียด", "สถุน", "ชาติชั่ว", "อัปรีย์",
-            "ดอกทอง", "ร่าน", "แรด", "ตอแหล", "หน้าตัวเมีย", "หี", "แตด", "โคม",
-            "พ่อมึง", "แม่มึง", "พ่อตาย", "แม่ตาย", "เย็ดแม่", "เย็ดพ่อ",
-            "kuy", "quyy", "here", "sad", "sud", "yed", "yet", "mae", "por", "mung", "gu",
-            "dok", "he", "hee", "tad", "kum", "sathoon", "rayum", "junrai"
-        ];
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-        let allMessages = [];            
-        let newMessagesQueue = [];
-        let allLimitedWinners = []; 
-        let totalUsers = 0; 
-        
-        // Demo Messages
-        const demoMessages = [
-            { text: "JFF CORP's (System)", name: "JFF CORP's", image: null, isLimited: false, reward: "-", level: 0 },
-            { text: "สุดยอดมากครับ (LV.MAX)", name: "Super Fan", image: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png", isLimited: false, level: 15 },
-            { text: "ชอบงานนี้มาก (Level 10)", name: "Pro User", image: null, isLimited: false, level: 10 },
-            { text: "สวัสดีครับ (Level 5)", name: "Newbie", image: null, isLimited: false, level: 5 },
-            { text: "สวัสดีวันจันทร์", name: "User A", image: null, isLimited: false, level: 0 },
-            { text: "Happy New Year!", name: "User B", image: "https://cdn-icons-png.flaticon.com/512/3135/3135768.png", isLimited: true, reward: "รางวัลพิเศษ", level: 0 }
-        ];
+        // --- ฟังก์ชันสุ่มรางวัล (Probability Logic) ---
+        function getRandomReward() {
+            // รายชื่อของรางวัลพิเศษ
+            const specialRewards = [
+                "จองห้อง Sharing Room (3 ชม.)", 
+                "จองห้อง Mini Theatre (3 ชม.)", 
+                "สิทธิ์การใช้งาน AI (คละแบบ)", 
+                "ยืมหนังสือเพิ่ม 1 เท่า", 
+                "รางวัลพิเศษ"
+            ];
 
-        const staticLeft = document.getElementById('static-left');
-        const staticRight = document.getElementById('static-right');
-        const flipper = document.getElementById('flipper');
-        const flipFrontContent = document.getElementById('flip-front-content');
-        const flipBackContent = document.getElementById('flip-back-content');
-        const scrollingContent = document.getElementById('scrolling-content');
-        const totalCountEl = document.getElementById('total-count');
-        
-        let userLevelMap = {};
+            // สุ่ม 0 - 100
+            const chance = Math.random() * 100;
 
-        function containsBadWords(text) {
-            if (!text) return false;
-            const lowerText = text.toLowerCase().replace(/\s/g, ''); 
-            return badWords.some(word => lowerText.includes(word));
-        }
-
-        async function fetchUserCount(name) {
-            if (!name) return 0;
-            const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-            const { count, error } = await supabase
-                .from('HappyOwl_messages')
-                .select('*', { count: 'exact', head: true })
-                .eq('name', name);
-            
-            if (error) { console.error(error); return 0; }
-            return count;
-        }
-
-        function formatMessage(data, realCount = 0) {
-            const isLimited = limitedRewards.includes(data.reward);
-            return { 
-                text: data.message, name: data.name, image: data.image_url, 
-                id: data.id || Date.now(), isLimited: isLimited, reward: data.reward,
-                level: realCount 
-            };
-        }
-
-        function getTextSizeClass(text) {
-            if (!text) return 'size-normal';
-            const len = text.length;
-            if (len > 80) return 'size-xs';
-            if (len > 40) return 'size-s';
-            return 'size-normal';
-        }
-
-        function updateScrollingBoard() {
-            if (allLimitedWinners.length === 0) {
-                scrollingContent.innerHTML = '<div style="text-align:center; color:#bbb; padding:20px;">รอลุ้นผู้โชคดี...</div>';
-                return;
-            }
-            const itemsHtml = allLimitedWinners.map(winner => {
-                const imgUrl = winner.image ? winner.image : 'https://cdn-icons-png.flaticon.com/512/847/847969.png';
-                return `
-                    <div class="winner-item">
-                        <img src="${imgUrl}" class="winner-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/847/847969.png'">
-                        <div class="winner-info">
-                            <div class="winner-name">${winner.name}</div>
-                            <div class="winner-reward">${winner.reward}</div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-
-            let finalHtml = itemsHtml;
-            if (allLimitedWinners.length < 5) {
-                finalHtml = itemsHtml + itemsHtml + itemsHtml + itemsHtml; 
+            // โอกาส 0.75% (ถ้าเลขที่สุ่มได้ <= 0.75)
+            if (chance <= 0.75) {
+                const randomIndex = Math.floor(Math.random() * specialRewards.length);
+                return specialRewards[randomIndex];
             } else {
-                finalHtml = itemsHtml + itemsHtml; 
+                return "ลูกอม";
             }
-            scrollingContent.innerHTML = finalHtml;
-            
-            const totalHeight = allLimitedWinners.length * 60; 
-            const duration = Math.max(10, totalHeight / 20); 
-            
-            scrollingContent.style.animation = `scrollVertical ${duration}s linear infinite`;
-            scrollingContent.classList.add('scrolling-up');
         }
 
-        // ==========================================
-        // 🔥 UPDATE LOGIC: LEVEL SYSTEM & STYLES 🔥
-        // ==========================================
-        function generateHTML(msg, seqIndex = 0, isStatic = false) {
-            if (!msg || !msg.text) return `<div class="msg-box" style="opacity:0"></div>`;
-            const delayClass = (!isStatic && seqIndex > 0) ? `d-${seqIndex}` : '';
-            const animClass = isStatic ? '' : 'msg-anim';
-            const opacityStyle = isStatic ? 'opacity:1; transform:translateY(0);' : '';
-            
-            const imgUrl = msg.image ? msg.image : 'https://cdn-icons-png.flaticon.com/512/847/847969.png'; 
-            const sizeClass = getTextSizeClass(msg.text);
-            
-            let boxClass = "msg-box";
-            let imgClass = "msg-img";
-            let crownHtml = "";
-            let extraDecor = "";
-            let lvBadgeHtml = "";
+        // --- ฟังก์ชันส่งข้อความ ---
+        async function submitMessage() {
+            const nameInput = document.getElementById('nameInput');
+            const msgInput = document.getElementById('msgInput');
+            const sendBtn = document.getElementById('sendBtn');
 
-            const cleanName = msg.name ? msg.name.trim().replace(/’/g, "'") : "";
-            const currentLevel = msg.level || 0;
+            const name = nameInput.value.trim();
+            const message = msgInput.value.trim();
 
-            // 1. JFF CORP's (Highest Priority)
-            if (cleanName === "JFF CORP's") {
-                boxClass += " jff-style"; 
-                extraDecor = `<div class="jff-decor-bar jff-decor-top"></div><div class="jff-decor-bar jff-decor-bottom"></div>`;
-                // Add DEV Badge for JFF
-                lvBadgeHtml = `<div class="lv-badge bg-dev">DEV</div>`;
-            } 
-            // 2. Level System
-            else if (currentLevel >= 5) {
-                boxClass += " limited-card"; 
-                // LV 15 => MAX (Rainbow Border White Box)
-                if (currentLevel >= 15) {
-                    boxClass += " lv-max";
-                    lvBadgeHtml = `<div class="lv-badge bg-max">LV.MAX</div>`;
-                } else if (currentLevel >= 10) {
-                    boxClass += " lv-10";
-                    lvBadgeHtml = `<div class="lv-badge bg-lv10">LV.10</div>`;
-                } else { // 5-9
-                    boxClass += " lv-5";
-                    lvBadgeHtml = `<div class="lv-badge bg-lv5">LV.5</div>`;
-                }
-            }
-            // 3. Limited Winner
-            else if (msg.isLimited) {
-                boxClass += " limited-card";
-                imgClass += " limited-img";
-                crownHtml = '<div class="crown-badge">👑</div>';
-            }
-
-            return `
-                <div class="${boxClass} ${animClass} ${delayClass}" style="${opacityStyle}">
-                    ${extraDecor}
-                    ${lvBadgeHtml}
-                    <div class="img-wrapper">
-                        ${crownHtml}
-                        <img src="${imgUrl}" class="${imgClass}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/847/847969.png'">
-                    </div>
-                    <div class="msg-content">
-                        <div class="msg-text ${sizeClass}">"${msg.text}"</div>
-                        <div class="msg-name">- ${msg.name} -</div>
-                    </div>
-                </div>`;
-        }
-
-        function createMsgHTML(msg, seqIndex) { return generateHTML(msg, seqIndex, false); }
-        function createMsgStatic(msg) { return generateHTML(msg, 0, true); }
-
-        function getNextBatchMixed() {
-            let batch = [];
-            while (newMessagesQueue.length > 0 && batch.length < 6) {
-                batch.push(newMessagesQueue.shift());
-            }
-            let attempts = 0;
-            while (batch.length < 6 && allMessages.length > 0) {
-                const randomIndex = Math.floor(Math.random() * allMessages.length);
-                const candidate = allMessages[randomIndex];
-                const isDuplicate = batch.some(m => m.id === candidate.id);
-                if (!isDuplicate || allMessages.length < 6) {
-                    batch.push(candidate);
-                }
-                attempts++;
-                if (attempts > 50) break; 
-            }
-            while (batch.length < 6) {
-                batch.push({ text: "Waiting for messages...", name: "Happy Owl", image: null });
-            }
-            return batch;
-        }
-
-        function renderPage(container, dataArray, startSeq = 0) {
-            container.innerHTML = dataArray.map((d, i) => {
-                const currentSeq = startSeq > 0 ? startSeq + i : 0;
-                return createMsgHTML(d, currentSeq);
-            }).join('');
-        }
-        function renderPageStatic(container, dataArray) {
-            container.innerHTML = dataArray.map(d => createMsgStatic(d)).join('');
-        }
-
-        let currentPageData = [];
-
-        async function connectSupabase() {
-            if (typeof window.supabase === 'undefined') {
-                allMessages = [...demoMessages];
-                allLimitedWinners = allMessages.filter(m => m.isLimited);
-                totalCountEl.innerText = "1,580"; 
-                updateScrollingBoard();
-                initBook();
+            if (!name || !message) {
+                alert("กรุณากรอกชื่อและข้อความให้ครบถ้วน");
                 return;
             }
-            const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-            try {
-                const { count, error: countError } = await supabase
-                    .from('HappyOwl_messages')
-                    .select('*', { count: 'exact', head: true });
-                
-                if (!countError) {
-                    totalUsers = count;
-                    totalCountEl.innerText = totalUsers.toLocaleString();
-                }
 
+            // คำหยาบ (Basic Filter)
+            const badWords = ["kuy", "here", "ควย", "เหี้ย", "สัส", "เย็ด"];
+            if (badWords.some(w => message.toLowerCase().includes(w) || name.toLowerCase().includes(w))) {
+                alert("กรุณาใช้คำสุภาพ");
+                return;
+            }
+
+            sendBtn.disabled = true;
+            sendBtn.innerText = "กำลังส่ง...";
+
+            // 1. สุ่มรางวัล
+            const myReward = getRandomReward();
+
+            // 2. ส่งข้อมูลเข้า Database
+            try {
                 const { data, error } = await supabase
                     .from('HappyOwl_messages')
-                    .select('*')
-                    .order('created_at', { ascending: false })
-                    .limit(100);
-
-                if (!error && data && data.length > 0) {
-                    let realMessages = [];
-                    const uniqueNames = [...new Set(data.map(item => item.name))];
-                    
-                    for (const name of uniqueNames) {
-                        if (name && !userLevelMap[name]) {
-                             userLevelMap[name] = await fetchUserCount(name);
+                    .insert([
+                        { 
+                            name: name, 
+                            message: message, 
+                            reward: myReward,
+                            // สามารถใส่ Avatar URL แบบสุ่ม หรือรับจาก User ก็ได้
+                            image_url: `https://api.dicebear.com/7.x/avataaars/svg?seed=${name}` 
                         }
-                    }
+                    ]);
 
-                    data.forEach(item => {
-                        if (!containsBadWords(item.message)) {
-                            const count = userLevelMap[item.name] || 0;
-                            realMessages.push(formatMessage(item, count));
-                        }
-                    });
-                    
-                    allMessages = realMessages; 
-                    allLimitedWinners = allMessages.filter(m => m.isLimited);
-                } else {
-                    allMessages = [...demoMessages];
-                    allLimitedWinners = allMessages.filter(m => m.isLimited);
-                }
-                updateScrollingBoard();
-                initBook(); 
+                if (error) throw error;
+
+                // 3. แสดงผลรางวัล
+                showReward(myReward);
                 
-                supabase.channel('realtime-book')
-                .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'HappyOwl_messages' }, async (payload) => {
-                    totalUsers++;
-                    totalCountEl.innerText = totalUsers.toLocaleString();
+                // ล้างค่า
+                nameInput.value = '';
+                msgInput.value = '';
 
-                    const newItem = payload.new;
-                    if (!containsBadWords(newItem.message)) {
-                        const freshCount = await fetchUserCount(newItem.name);
-                        userLevelMap[newItem.name] = freshCount;
-
-                        const formatted = formatMessage(newItem, freshCount);
-                        newMessagesQueue.push(formatted);
-                        allMessages.push(formatted);
-
-                        if (formatted.isLimited) {
-                            allLimitedWinners.unshift(formatted); 
-                            updateScrollingBoard(); 
-                        }
-                    }
-                })
-                .subscribe();
             } catch (err) {
-                console.error("Supabase Error:", err);
-                allMessages = [...demoMessages];
-                allLimitedWinners = allMessages.filter(m => m.isLimited);
-                updateScrollingBoard();
-                initBook();
+                console.error("Error:", err);
+                alert("เกิดข้อผิดพลาดในการส่งข้อมูล: " + err.message);
+            } finally {
+                sendBtn.disabled = false;
+                sendBtn.innerText = "🚀 ส่งข้อความ & ลุ้นรางวัล";
             }
         }
 
-        function initBook() {
-            currentPageData = getNextBatchMixed();
-            renderPage(staticLeft, currentPageData.slice(0, 3), 1); 
-            renderPage(staticRight, currentPageData.slice(3, 6), 4);
+        function showReward(reward) {
+            const modal = document.getElementById('rewardModal');
+            const rewardText = document.getElementById('rewardText');
+            const title = document.querySelector('.reward-title');
+
+            if (reward === "ลูกอม") {
+                title.innerText = "ขอบคุณที่ร่วมสนุก!";
+                title.style.color = "#ffffff";
+                rewardText.innerText = "คุณได้รับ: " + reward + " 🍬";
+            } else {
+                title.innerText = "🏆 ยินดีด้วย!! (Rare Item)";
+                title.style.color = "#ffd700";
+                rewardText.innerText = "คุณได้รับ: " + reward + " ✨";
+            }
+            
+            modal.style.display = 'flex';
         }
 
-        function turnPage() {
-            const nextBatch = getNextBatchMixed();
-            const nextLeft = nextBatch.slice(0, 3);
-            const nextRight = nextBatch.slice(3, 6);
-            renderPageStatic(flipFrontContent, currentPageData.slice(3, 6));
-            flipBackContent.innerHTML = ''; 
-            flipper.style.display = 'block';
-            flipper.classList.add('do-flip');
-            setTimeout(() => { staticRight.innerHTML = ''; }, 200);
-            setTimeout(() => {
-                renderPage(staticLeft, nextLeft, 1);
-                renderPage(staticRight, nextRight, 4);
-                currentPageData = nextBatch;
-                flipper.classList.remove('do-flip');
-                flipper.style.display = 'none';
-            }, 1800);
+        function closeModal() {
+            document.getElementById('rewardModal').style.display = 'none';
         }
-
-        connectSupabase();
-        setInterval(turnPage, 12000); 
-
     </script>
 </body>
 </html>
