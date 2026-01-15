@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy OWL - Admin Dashboard</title>
+    <title>Happy OWL - Admin Dashboard (Realtime)</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -63,7 +63,13 @@
         
         /* Animation */
         .fade-in-up { animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; transform: translateY(20px); }
+        .new-item-flash { animation: flashHighlight 2s ease-out forwards; }
+        
         @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+        @keyframes flashHighlight {
+            0% { background-color: #dbeafe; transform: scale(1.02); }
+            100% { background-color: transparent; transform: scale(1); }
+        }
         
         /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 6px; }
@@ -78,18 +84,26 @@
         
         <div class="flex flex-col md:flex-row justify-between items-end md:items-center mb-8 gap-4 fade-in-up" style="animation-delay: 0.1s;">
             <div class="flex items-center gap-3">
-                <div class="bg-white p-3 rounded-2xl shadow-sm text-blue-500">
+                <div class="bg-white p-3 rounded-2xl shadow-sm text-blue-500 relative">
                     <ion-icon name="snow-outline" class="text-3xl"></ion-icon>
+                    <span class="absolute -top-1 -right-1 flex h-3 w-3">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                    </span>
                 </div>
                 <div>
                     <h1 class="text-3xl font-bold text-slate-800 tracking-tight">Happy OWL <span class="text-sky-500">Admin</span></h1>
-                    <p class="text-slate-500 text-sm font-light">ระบบจัดการข้อมูลและสถิติรายวัน</p>
+                    <p class="text-slate-500 text-sm font-light">ระบบ Realtime Monitor</p>
                 </div>
             </div>
             
             <div class="glass-card px-1 py-1 flex items-center gap-2 rounded-full shadow-sm">
-                <div class="pl-4 pr-2 py-1 text-slate-500 text-sm font-medium flex items-center gap-2">
-                    <ion-icon name="calendar-outline"></ion-icon> เลือกวันที่:
+                <button onclick="clearDateFilter()" class="px-4 py-2 text-sm font-medium rounded-full transition-colors hover:bg-blue-50 text-slate-600 hover:text-blue-600" id="btnAll">
+                    ทั้งหมด
+                </button>
+                <div class="h-6 w-px bg-slate-200"></div>
+                <div class="pl-2 pr-2 py-1 text-slate-500 text-sm font-medium flex items-center gap-2">
+                    <ion-icon name="calendar-outline"></ion-icon>
                 </div>
                 <input type="date" id="filterDate" class="border-none bg-slate-100 rounded-full px-4 py-2 text-slate-700 font-medium focus:ring-2 focus:ring-blue-300 outline-none transition cursor-pointer">
                 <button onclick="resetAndLoad()" class="bg-blue-500 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-blue-600 hover:rotate-180 transition duration-500 shadow-lg shadow-blue-200">
@@ -104,8 +118,8 @@
                 <div class="relative z-10">
                     <div class="flex justify-between items-start">
                         <div>
-                            <p class="text-blue-100 text-sm font-medium mb-1">ผู้เล่นทั้งหมด (วันนี้)</p>
-                            <h2 class="text-4xl font-bold" id="statTotal">...</h2>
+                            <p class="text-blue-100 text-sm font-medium mb-1" id="labelTotal">ผู้เล่นทั้งหมด (วันนี้)</p>
+                            <h2 class="text-4xl font-bold" id="statTotal">0</h2>
                         </div>
                         <div class="bg-white/20 p-2 rounded-lg backdrop-blur-sm">
                             <ion-icon name="people" class="text-2xl"></ion-icon>
@@ -120,7 +134,7 @@
                     <div class="flex justify-between items-start">
                         <div>
                             <p class="text-yellow-100 text-sm font-medium mb-1">รางวัล Limited</p>
-                            <h2 class="text-4xl font-bold" id="statLimited">...</h2>
+                            <h2 class="text-4xl font-bold" id="statLimited">0</h2>
                         </div>
                         <div class="bg-white/20 p-2 rounded-lg backdrop-blur-sm">
                             <ion-icon name="star" class="text-2xl"></ion-icon>
@@ -135,7 +149,7 @@
                     <div class="flex justify-between items-start">
                         <div>
                             <p class="text-slate-200 text-sm font-medium mb-1">รางวัลปลอบใจ</p>
-                            <h2 class="text-4xl font-bold" id="statConsolation">...</h2>
+                            <h2 class="text-4xl font-bold" id="statConsolation">0</h2>
                         </div>
                         <div class="bg-white/20 p-2 rounded-lg backdrop-blur-sm">
                             <ion-icon name="gift" class="text-2xl"></ion-icon>
@@ -150,7 +164,7 @@
                 <table class="w-full text-left border-collapse">
                     <thead>
                         <tr class="bg-blue-50/50 text-slate-500 text-sm uppercase tracking-wider">
-                            <th class="p-4 font-semibold w-24 rounded-tl-2xl">เวลา</th>
+                            <th class="p-4 font-semibold w-28 rounded-tl-2xl">เวลา/วันที่</th>
                             <th class="p-4 font-semibold w-24">รูปภาพ</th>
                             <th class="p-4 font-semibold">ข้อความอวยพร</th>
                             <th class="p-4 font-semibold w-48">รางวัล</th>
@@ -180,31 +194,146 @@
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 
     <script>
-        // --- 1. CONFIGURATION (เหมือนเดิม) ---
+        // --- 1. CONFIGURATION ---
         const supabaseUrl = 'https://kgyhqwgpeyfszowdrhbd.supabase.co';
         const supabaseKey = 'sb_publishable_DgFCEd6iMOogHTNtr4ht-Q_4SAn8FBN'; 
         const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
 
+        const limitedNames = ["จองห้อง Sharing Room (3 ชม.)", "จองห้อง Mini Theatre (3 ชม.)", "สิทธิ์การใช้งาน AI (คละแบบ)", "ยืมหนังสือเพิ่ม 1 เท่า"];
         let currentOffset = 0;
         const limit = 30;
         
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById('filterDate').value = today;
-
+        // --- 2. INIT & EVENT LISTENERS ---
         document.addEventListener('DOMContentLoaded', () => {
-            updateStatsOnly();
+            // ตั้งค่าเริ่มต้นเป็นวันนี้
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('filterDate').value = today;
+            
+            updateStatsFromDB();
             resetAndLoad();
+            setupRealtime();
         });
 
         document.getElementById('filterDate').addEventListener('change', () => {
-            updateStatsOnly();
+            updateStatsFromDB();
             resetAndLoad();
         });
 
+        function clearDateFilter() {
+            document.getElementById('filterDate').value = ''; // เคลียร์วันที่
+            updateStatsFromDB();
+            resetAndLoad();
+        }
+
+        // --- 3. REALTIME LOGIC ---
+        function setupRealtime() {
+            const channel = supabaseClient
+                .channel('realtime-messages')
+                .on(
+                    'postgres_changes',
+                    { event: 'INSERT', schema: 'public', table: 'HappyOwl_messages' },
+                    (payload) => {
+                        handleNewMessage(payload.new);
+                    }
+                )
+                .on(
+                    'postgres_changes',
+                    { event: 'DELETE', schema: 'public', table: 'HappyOwl_messages' },
+                    (payload) => {
+                        handleRemoteDelete(payload.old.id);
+                    }
+                )
+                .subscribe((status) => {
+                    console.log('Realtime status:', status);
+                });
+        }
+
+        function handleNewMessage(newItem) {
+            const filterDate = document.getElementById('filterDate').value;
+            const itemDate = newItem.created_at.split('T')[0];
+
+            // แสดงผลถ้าเลือก "ทั้งหมด" หรือ "วันที่ตรงกัน"
+            if (!filterDate || filterDate === itemDate) {
+                const tbody = document.getElementById('tableBody');
+                
+                // ลบ row "ไม่พบข้อมูล" ออกถ้ามี
+                const emptyRow = document.getElementById('emptyRow');
+                if (emptyRow) emptyRow.remove();
+
+                const html = createRowHTML(newItem, 0, true);
+                tbody.insertAdjacentHTML('afterbegin', html);
+
+                // อัปเดต Stats แบบ Realtime (เพิ่ม)
+                updateLocalStats('increment', newItem.reward);
+            }
+        }
+
+        function handleRemoteDelete(id) {
+            const row = document.getElementById(`row-${id}`);
+            if (row) {
+                // 1. ดึงข้อมูล Reward จาก DOM ก่อนลบ เพื่อเอาไปลบจำนวนใน Stats
+                // เราเช็คว่ามี badge สีส้ม (Limited) หรือไม่
+                const isLimited = row.querySelector('.text-amber-600') !== null;
+                const rewardType = isLimited ? limitedNames[0] : 'Normal'; // ส่งค่าอะไรก็ได้ที่เป็น Limited หรือ Normal เพื่อให้ฟังก์ชัน updateLocalStats ตัดสินใจถูก
+
+                // 2. อัปเดต Stats แบบ Realtime (ลด)
+                updateLocalStats('decrement', rewardType);
+
+                // 3. Animation ลบ
+                row.style.transform = 'translateX(100px)';
+                row.style.opacity = '0';
+                setTimeout(() => row.remove(), 300);
+            }
+        }
+
+        // ฟังก์ชันจัดการตัวเลขหน้าจอโดยไม่ต้องโหลดใหม่
+        function updateLocalStats(action, rewardName) {
+            const totalEl = document.getElementById("statTotal");
+            const limitedEl = document.getElementById("statLimited");
+            const consolationEl = document.getElementById("statConsolation");
+
+            let total = parseInt(totalEl.innerText.replace(/,/g, '')) || 0;
+            let limited = parseInt(limitedEl.innerText.replace(/,/g, '')) || 0;
+            let consolation = parseInt(consolationEl.innerText.replace(/,/g, '')) || 0;
+
+            const isLimited = limitedNames.includes(rewardName);
+
+            if (action === 'increment') {
+                total++;
+                if (isLimited) limited++; else consolation++;
+            } else if (action === 'decrement') {
+                if (total > 0) total--;
+                if (isLimited) {
+                    if (limited > 0) limited--;
+                } else {
+                    if (consolation > 0) consolation--;
+                }
+            }
+
+            totalEl.innerText = total.toLocaleString();
+            limitedEl.innerText = limited.toLocaleString();
+            consolationEl.innerText = consolation.toLocaleString();
+        }
+
+        // --- 4. DATA FETCHING ---
         function resetAndLoad() {
             currentOffset = 0;
             document.getElementById('tableBody').innerHTML = '';
             document.getElementById('loadMoreContainer').classList.add('hidden');
+            
+            // เปลี่ยน Label
+            const dateStr = document.getElementById('filterDate').value;
+            const label = document.getElementById('labelTotal');
+            const btnAll = document.getElementById('btnAll');
+            
+            if (!dateStr) {
+                label.innerText = "ผู้เล่นทั้งหมด (ทุกช่วงเวลา)";
+                btnAll.classList.add('bg-blue-100', 'text-blue-700'); // Highlight ปุ่มทั้งหมด
+            } else {
+                label.innerText = "ผู้เล่นทั้งหมด (วันที่เลือก)";
+                btnAll.classList.remove('bg-blue-100', 'text-blue-700');
+            }
+
             fetchMoreData();
         }
 
@@ -217,16 +346,20 @@
             loadMoreBtn.classList.add('hidden');
 
             try {
-                const start = dateStr + 'T00:00:00';
-                const end = dateStr + 'T23:59:59';
-
-                const { data, error } = await supabaseClient
+                let query = supabaseClient
                     .from('HappyOwl_messages')
                     .select('*')
-                    .gte('created_at', start)
-                    .lte('created_at', end)
                     .order('created_at', { ascending: false })
                     .range(currentOffset, currentOffset + limit - 1);
+
+                // ถ้ามีการเลือกวันที่ ให้ Filter (ถ้าไม่เลือก คือเอาทั้งหมด)
+                if (dateStr) {
+                    const start = dateStr + 'T00:00:00';
+                    const end = dateStr + 'T23:59:59';
+                    query = query.gte('created_at', start).lte('created_at', end);
+                }
+
+                const { data, error } = await query;
 
                 if (error) throw error;
 
@@ -240,11 +373,12 @@
                     }
                 } else if (currentOffset === 0) {
                     document.getElementById('tableBody').innerHTML = `
-                        <tr>
+                        <tr id="emptyRow">
                             <td colspan="5" class="text-center py-16">
                                 <div class="flex flex-col items-center text-slate-300">
                                     <ion-icon name="file-tray-outline" class="text-6xl mb-2"></ion-icon>
-                                    <span class="text-slate-400">ไม่พบข้อมูลในวันที่เลือก</span>
+                                    <span class="text-slate-400">ไม่พบข้อมูล</span>
+                                    <span class="text-xs text-slate-300 mt-2">รอรับข้อมูลแบบ Realtime...</span>
                                 </div>
                             </td>
                         </tr>`;
@@ -258,71 +392,87 @@
 
         function renderTable(data) {
             const tbody = document.getElementById('tableBody');
-            const limitedNames = ["จองห้อง Sharing Room (3 ชม.)", "จองห้อง Mini Theatre (3 ชม.)", "สิทธิ์การใช้งาน AI (คละแบบ)", "ยืมหนังสือเพิ่ม 1 เท่า"];
-
             data.forEach((item, index) => {
-                const time = new Date(item.created_at).toLocaleTimeString('th-TH', { hour: '2-digit', minute:'2-digit' });
-                
-                const img = item.image_url 
-                    ? `<div class="w-10 h-10 rounded-full p-0.5 bg-gradient-to-tr from-blue-400 to-cyan-300">
-                        <a href="${item.image_url}" target="_blank">
-                            <img src="${item.image_url}" class="w-full h-full object-cover rounded-full border-2 border-white hover:scale-150 transition cursor-zoom-in">
-                        </a>
-                       </div>` 
-                    : '<div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-300"><ion-icon name="image-outline"></ion-icon></div>';
-                
-                let rewardBadge = '';
-                if(limitedNames.includes(item.reward)) {
-                    rewardBadge = `<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-600 border border-amber-200">
-                        <ion-icon name="star"></ion-icon> ${item.reward}
-                    </span>`;
-                } else {
-                    rewardBadge = `<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-slate-50 text-slate-500 border border-slate-200">
-                        ${item.reward || '-'}
-                    </span>`;
-                }
-
-                const message = escapeHtml(item.message || '');
-                const rowId = `row-${item.id}`;
-
-                // Animation delay for cascading effect
-                const delay = (index % limit) * 0.05; 
-
-                const row = `
-                    <tr id="${rowId}" class="table-row-hover transition-all duration-200 fade-in-up" style="animation-delay: ${delay}s">
-                        <td class="p-4 align-top">
-                            <span class="text-xs font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded-md">${time}</span>
-                        </td>
-                        <td class="p-4 align-top">${img}</td>
-                        <td class="p-4 align-top">
-                            <div class="font-bold text-slate-700 text-base mb-1">${escapeHtml(item.name)}</div>
-                            <div class="bg-blue-50/50 p-3 rounded-xl rounded-tl-none border border-blue-100 text-slate-600 text-sm relative">
-                                "${message}"
-                            </div>
-                        </td>
-                        <td class="p-4 align-top pt-5">${rewardBadge}</td>
-                        <td class="p-4 text-center align-top pt-5">
-                            <button onclick="deleteItem(${item.id}, '${escapeHtml(item.name)}')" class="text-slate-400 hover:text-red-500 hover:bg-red-50 p-2 rounded-full transition duration-300">
-                                <ion-icon name="trash-outline" class="text-xl"></ion-icon>
-                            </button>
-                        </td>
-                    </tr>
-                `;
-                tbody.insertAdjacentHTML('beforeend', row);
+                const html = createRowHTML(item, index, false);
+                tbody.insertAdjacentHTML('beforeend', html);
             });
         }
 
-        async function updateStatsOnly() {
-            const dateStr = document.getElementById('filterDate').value;
-            const start = dateStr + 'T00:00:00';
-            const end = dateStr + 'T23:59:59';
-            const limitedNames = ["จองห้อง Sharing Room (3 ชม.)", "จองห้อง Mini Theatre (3 ชม.)", "สิทธิ์การใช้งาน AI (คละแบบ)", "ยืมหนังสือเพิ่ม 1 เท่า"];
+        function createRowHTML(item, index, isNew = false) {
+            const dateObj = new Date(item.created_at);
+            const time = dateObj.toLocaleTimeString('th-TH', { hour: '2-digit', minute:'2-digit' });
+            const dateShort = dateObj.toLocaleDateString('th-TH', { day: 'numeric', month: 'short' });
+            
+            const img = item.image_url 
+                ? `<div class="w-10 h-10 rounded-full p-0.5 bg-gradient-to-tr from-blue-400 to-cyan-300">
+                    <a href="${item.image_url}" target="_blank">
+                        <img src="${item.image_url}" class="w-full h-full object-cover rounded-full border-2 border-white hover:scale-150 transition cursor-zoom-in">
+                    </a>
+                   </div>` 
+                : '<div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-300"><ion-icon name="image-outline"></ion-icon></div>';
+            
+            let rewardBadge = '';
+            // ใช้ Class สีต่างกันเพื่อระบุประเภทรางวัล (มีผลต่อการลบแล้วเช็ค Stats)
+            if(limitedNames.includes(item.reward)) {
+                rewardBadge = `<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-600 border border-amber-200">
+                    <ion-icon name="star"></ion-icon> ${item.reward}
+                </span>`;
+            } else {
+                rewardBadge = `<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-slate-50 text-slate-500 border border-slate-200">
+                    ${item.reward || '-'}
+                </span>`;
+            }
 
-            const { data, error } = await supabaseClient
-                .from('HappyOwl_messages')
-                .select('reward')
-                .gte('created_at', start)
-                .lte('created_at', end);
+            const message = escapeHtml(item.message || '');
+            const rowId = `row-${item.id}`;
+
+            let animationClass = "fade-in-up";
+            let animationStyle = `animation-delay: ${(index % limit) * 0.05}s`;
+            
+            if (isNew) {
+                animationClass = "new-item-flash fade-in-up";
+                animationStyle = "animation-delay: 0s";
+            }
+
+            return `
+                <tr id="${rowId}" class="table-row-hover transition-all duration-200 ${animationClass}" style="${animationStyle}">
+                    <td class="p-4 align-top">
+                        <div class="flex flex-col">
+                            <span class="text-xs font-bold text-slate-600">${time}</span>
+                            <span class="text-[10px] text-slate-400">${dateShort}</span>
+                        </div>
+                        ${isNew ? '<span class="text-[10px] text-green-500 font-bold">ใหม่</span>' : ''}
+                    </td>
+                    <td class="p-4 align-top">${img}</td>
+                    <td class="p-4 align-top">
+                        <div class="font-bold text-slate-700 text-base mb-1">${escapeHtml(item.name)}</div>
+                        <div class="bg-blue-50/50 p-3 rounded-xl rounded-tl-none border border-blue-100 text-slate-600 text-sm relative">
+                            "${message}"
+                        </div>
+                    </td>
+                    <td class="p-4 align-top pt-5">${rewardBadge}</td>
+                    <td class="p-4 text-center align-top pt-5">
+                        <button onclick="deleteItem(${item.id}, '${escapeHtml(item.name)}')" class="text-slate-400 hover:text-red-500 hover:bg-red-50 p-2 rounded-full transition duration-300">
+                            <ion-icon name="trash-outline" class="text-xl"></ion-icon>
+                        </button>
+                    </td>
+                </tr>
+            `;
+        }
+
+        // --- 5. STATS ---
+        async function updateStatsFromDB() {
+            const dateStr = document.getElementById('filterDate').value;
+            
+            let query = supabaseClient.from('HappyOwl_messages').select('reward', { count: 'exact' });
+
+            if (dateStr) {
+                const start = dateStr + 'T00:00:00';
+                const end = dateStr + 'T23:59:59';
+                query = query.gte('created_at', start).lte('created_at', end);
+            }
+
+            const { data, error } = await query;
 
             if (!error && data) {
                 let total = data.length;
@@ -334,9 +484,9 @@
                     else consolationCount++;
                 });
 
-                animateValue("statTotal", parseInt(document.getElementById("statTotal").innerText) || 0, total, 1000);
-                animateValue("statLimited", parseInt(document.getElementById("statLimited").innerText) || 0, limitedCount, 1000);
-                animateValue("statConsolation", parseInt(document.getElementById("statConsolation").innerText) || 0, consolationCount, 1000);
+                animateValue("statTotal", parseInt(document.getElementById("statTotal").innerText.replace(/,/g, '')) || 0, total, 1000);
+                animateValue("statLimited", parseInt(document.getElementById("statLimited").innerText.replace(/,/g, '')) || 0, limitedCount, 1000);
+                animateValue("statConsolation", parseInt(document.getElementById("statConsolation").innerText.replace(/,/g, '')) || 0, consolationCount, 1000);
             }
         }
 
@@ -347,7 +497,7 @@
             const step = (timestamp) => {
                 if (!startTimestamp) startTimestamp = timestamp;
                 const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-                obj.innerHTML = Math.floor(progress * (end - start) + start);
+                obj.innerHTML = Math.floor(progress * (end - start) + start).toLocaleString();
                 if (progress < 1) {
                     window.requestAnimationFrame(step);
                 }
@@ -355,6 +505,7 @@
             window.requestAnimationFrame(step);
         }
 
+        // --- 6. UTILS ---
         async function deleteItem(id, name) {
             Swal.fire({
                 title: 'ยืนยันการลบ?',
@@ -366,9 +517,7 @@
                 confirmButtonText: 'ลบข้อมูล',
                 cancelButtonText: 'ยกเลิก',
                 background: '#fff',
-                customClass: {
-                    popup: 'rounded-2xl'
-                }
+                customClass: { popup: 'rounded-2xl' }
             }).then(async (result) => {
                 if (result.isConfirmed) {
                     try {
@@ -379,14 +528,6 @@
 
                         if (error) throw error;
                         
-                        // Remove row visually immediately for better UX
-                        const row = document.getElementById(`row-${id}`);
-                        if(row) {
-                            row.style.transform = 'translateX(100px)';
-                            row.style.opacity = '0';
-                            setTimeout(() => row.remove(), 300);
-                        }
-                        
                         const Toast = Swal.mixin({
                             toast: true,
                             position: 'top-end',
@@ -396,7 +537,7 @@
                         });
                         Toast.fire({ icon: 'success', title: 'ลบข้อมูลสำเร็จ' });
                         
-                        updateStatsOnly();
+                        // ไม่ต้องทำอะไรเพิ่มที่นี่ เพราะ Realtime Listener (handleRemoteDelete) จะทำงานเอง
 
                     } catch (err) {
                         Swal.fire('Error', err.message, 'error');
